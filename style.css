@@ -2,8 +2,8 @@
 :root{--navy:#1a1a2e;--blue:#2764E2;--blue-lt:#EEF3FD;--coral:#FF644A;--coral-lt:#FFF0ED;--ink:#0D0E1A;--slate:#5A607A;--mist:#F4F5F9;--border:#DDE0EC;--white:#FFFFFF;--green:#22C55E;--amber:#F59E0B;--purple:#8B5CF6;--cyan:#06B6D4;--radius:10px;--radius-lg:16px;--shadow-sm:0 1px 3px rgba(13,14,26,.08);--shadow-md:0 4px 16px rgba(13,14,26,.10);--shadow-lg:0 12px 40px rgba(13,14,26,.14);--transition:.2s ease}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{overflow-y:auto;overflow-x:hidden;min-height:100vh;font-family:'Outfit',system-ui,sans-serif;background:#e8eaef;color:var(--ink);font-size:15px;line-height:1.6}
-.app-shell{max-width:100%;margin:0;background:var(--white);box-shadow:none;overflow:visible;min-height:100vh;border-radius:0}
+body{overflow-y:auto;overflow-x:hidden;min-height:100vh;font-family:'Outfit',system-ui,sans-serif;background:#1a1a2e;color:var(--ink);font-size:15px;line-height:1.6}
+.app-shell{max-width:1440px;margin:0 auto;background:var(--white);box-shadow:0 0 0 1px rgba(255,255,255,.06);overflow:visible;min-height:calc(100vh - 64px);border-radius:0}
 /* ─────── HEADER: Samsung dark ─────── */
 header{background:#1a1a2e;padding:0 32px;position:sticky;top:0;overflow:visible;z-index:200}
 .header-top{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:64px;position:relative;z-index:1}
