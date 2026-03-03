@@ -2,10 +2,10 @@
 :root{--navy:#1a1a2e;--blue:#2764E2;--blue-lt:#EEF3FD;--coral:#FF644A;--coral-lt:#FFF0ED;--ink:#0D0E1A;--slate:#5A607A;--mist:#F4F5F9;--border:#DDE0EC;--white:#FFFFFF;--green:#22C55E;--amber:#F59E0B;--purple:#8B5CF6;--cyan:#06B6D4;--radius:10px;--radius-lg:16px;--shadow-sm:0 1px 3px rgba(13,14,26,.08);--shadow-md:0 4px 16px rgba(13,14,26,.10);--shadow-lg:0 12px 40px rgba(13,14,26,.14);--transition:.2s ease}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{overflow-y:auto;overflow-x:hidden;min-height:100vh;font-family:'Outfit',system-ui,sans-serif;background:#1a1a2e;color:var(--ink);font-size:15px;line-height:1.6}
-.app-shell{max-width:1440px;margin:0 auto;background:transparent;overflow:visible;min-height:100vh;border-radius:0}
+body{overflow-y:auto;overflow-x:hidden;min-height:100vh;font-family:'Outfit',system-ui,sans-serif;background:linear-gradient(135deg,#151960 0%,#1E2171 55%,#2764E2 100%);color:var(--ink);font-size:15px;line-height:1.6}
+.app-shell{max-width:1440px;margin:0 auto;background:transparent;box-shadow:none;overflow:visible;min-height:calc(100vh - 64px);border-radius:0}
 /* ─────── HEADER: Samsung dark ─────── */
-header{background:#1a1a2e;padding:0 32px;position:sticky;top:0;overflow:visible;z-index:200}
+header{background:rgba(0,0,0,.18);padding:0 32px;position:sticky;top:0;overflow:visible;z-index:200}
 .header-top{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:64px;position:relative;z-index:1}
 .header-brand{display:flex;flex-direction:column;gap:1px;flex-shrink:0}
 .brand-logo{font-size:18px;font-weight:700;color:#fff;letter-spacing:.5px;font-family:'Outfit',sans-serif}
@@ -47,28 +47,28 @@ header{background:#1a1a2e;padding:0 32px;position:sticky;top:0;overflow:visible;
 .cat-pill:hover{background:#e0e4f0;color:#1a1a2e}
 .cat-pill.active{background:#1a1a2e;color:#fff;border-color:#1a1a2e;font-weight:600}
 /* ─────── Also update font references ─────── */
-.filter-label,.sidebar-title,.results-heading,.filter-select,.btn-action,.btn-search,.help-cta{font-family:'Outfit',sans-serif}
+.filter-label,.sidebar-title,.results-heading,.filter-select,.btn-action,.btn-search,.help-cta{color:#fff;font-family:'Outfit',sans-serif}
 
-.search-bar{padding:20px 24px;background:#1a1a2e;border-bottom:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;gap:12px;align-items:center}
-.help-cta{display:block;width:100%;max-width:560px;padding:13px 20px;background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.2);border-radius:var(--radius);cursor:pointer;font-weight:600;font-size:15px;font-family:inherit;text-align:center;text-decoration:none;transition:var(--transition)}
+.search-bar{padding:20px 24px;background:rgba(0,0,0,.12);border-bottom:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;gap:12px;align-items:center}
+.help-cta{display:block;width:100%;max-width:560px;padding:13px 20px;background:rgba(255,255,255,.12);color:#fff;border:none;border-radius:var(--radius);cursor:pointer;font-weight:600;font-size:15px;font-family:inherit;text-align:center;text-decoration:none;transition:var(--transition)}
 .help-cta:hover{background:var(--blue);transform:translateY(-1px);box-shadow:var(--shadow-md)}
-.search-row{display:flex;width:100%;max-width:560px;border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;background:#fff;transition:var(--transition)}
+.search-row{display:flex;width:100%;max-width:560px;border:1.5px solid rgba(255,255,255,.2);border-radius:var(--radius);overflow:hidden;background:rgba(255,255,255,.08);transition:var(--transition)}
 .search-row:focus-within{border-color:var(--blue);box-shadow:0 0 0 3px rgba(39,100,226,.12)}
-.search-row input{flex:1;padding:12px 16px;border:none;outline:none;font-size:15px;font-family:inherit;background:transparent;min-width:0}
+.search-row input{color:#fff;flex:1;padding:12px 16px;border:none;outline:none;font-size:15px;font-family:inherit;background:rgba(255,255,255,.08);min-width:0}
 .search-row input::placeholder{color:#AAB0C6}
 .btn-search{background:var(--navy);color:#fff;border:none;padding:12px 22px;font-weight:600;font-size:14px;font-family:inherit;cursor:pointer;transition:var(--transition);white-space:nowrap}
 .btn-search:hover{background:var(--blue)}
 .search-status{font-size:13px;color:var(--slate);text-align:center}
-.main-layout{display:flex;gap:0;align-items:flex-start;min-height:500px;background:#1a1a2e}
-.filters-sidebar{width:260px;flex-shrink:0;background:#13132a;border-right:1px solid rgba(255,255,255,.08);padding:24px 18px;position:sticky;top:0}
-.sidebar-title{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:16px}
+.main-layout{background:transparent;display:flex;gap:0;align-items:flex-start;min-height:500px}
+.filters-sidebar{width:260px;flex-shrink:0;background:rgba(0,0,0,.15);border-right:1px solid rgba(255,255,255,.1);padding:24px 18px;position:sticky;top:0}
+.sidebar-title{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:16px}
 .filter-group{margin-bottom:18px}
-.filter-label{display:block;font-size:12px;font-weight:600;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
-.filter-select{width:100%;padding:9px 32px 9px 12px;border:1.5px solid rgba(255,255,255,.12);border-radius:8px;font-size:13.5px;font-family:inherit;background:#1e1e3a;-webkit-appearance:none;color:#fff;transition:var(--transition);cursor:pointer}
+.filter-label{display:block;font-size:12px;font-weight:600;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+.filter-select{width:100%;padding:9px 32px 9px 12px;border:1.5px solid rgba(255,255,255,.15);border-radius:8px;font-size:13.5px;font-family:inherit;background:rgba(255,255,255,.08);-webkit-appearance:none;color:#fff;transition:var(--transition);cursor:pointer}
 .filter-select:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(39,100,226,.1)}
 .btn-reset{width:100%;padding:10px 16px;background:var(--coral);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:13.5px;font-family:inherit;transition:var(--transition);margin-top:4px}
 .btn-reset:hover{background:#e55a3f}
-.results-area{flex:1;padding:24px;min-width:0;background:#1a1a2e}
+.results-area{background:transparent;flex:1;padding:24px;min-width:0}
 .results-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px}
 .results-heading{font-size:16px;font-weight:700;color:#fff;color:var(--slate);background:var(--mist);padding:4px 10px;border-radius:20px;border:1px solid var(--border)}
 .result-card{border:1.5px solid var(--border);border-radius:var(--radius-lg);background:#fff;margin-bottom:16px;overflow:hidden;transition:box-shadow var(--transition),transform var(--transition),border-color var(--transition);position:relative}
@@ -497,7 +497,7 @@ mark{background:#FEF9C3;color:var(--ink);border-radius:2px;padding:0 2px}
 .sku-stock-btn:hover{background:var(--blue-lt);border-color:var(--blue);color:var(--blue)}
 .inline-stock-popup{position:fixed;background:#fff;border-radius:12px;box-shadow:0 12px 48px rgba(13,14,26,.22);border:1px solid var(--border);min-width:320px;max-width:380px;z-index:99999;animation:popIn .15s ease}
 @keyframes popIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
-.inline-stock-header{display:flex;align-items:center;gap:8px;padding:12px 14px 10px;border-bottom:1px solid var(--border);background:var(--navy);border-radius:12px 12px 0 0;color:#fff}
+.inline-stock-header{display:flex;align-items:center;gap:8px;padding:12px 14px 10px;border-bottom:1px solid rgba(255,255,255,.1);background:var(--navy);border-radius:12px 12px 0 0;color:#fff}
 .inline-stock-sku{font-family:'DM Mono',monospace;font-size:12px;font-weight:500;background:rgba(255,255,255,.15);padding:2px 8px;border-radius:4px;flex-shrink:0}
 .inline-stock-title{font-size:12px;font-weight:500;opacity:.8;flex:1}
 .inline-stock-close{background:rgba(255,255,255,.15);border:none;color:#fff;width:22px;height:22px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;line-height:1;flex-shrink:0;transition:.15s}
