@@ -677,3 +677,39 @@ mark{background:#FEF9C3;color:var(--ink);border-radius:2px;padding:0 2px}
 .isp-transit{color:rgba(255,255,255,.5)!important}
 .isp-in{background:rgba(34,197,94,.2)!important;color:#86efac!important}
 .isp-out{background:rgba(239,68,68,.2)!important;color:#fca5a5!important}
+
+/* ── Сканер: выравниваем с остальными фильтрами ── */
+.custom-scanner-dropdown{width:100%!important;position:relative}
+#scanner-display, .custom-scanner-trigger{
+  width:100%!important;
+  box-sizing:border-box!important;
+  padding:6px 22px 6px 0!important;
+  margin:0!important;
+  border:none!important;
+  border-bottom:1px solid rgba(255,255,255,.12)!important;
+  border-radius:0!important;
+  background:transparent!important;
+  color:#fff!important;
+  font-size:14px!important;
+  font-weight:700!important;
+  font-family:"Outfit",sans-serif!important;
+  text-align:left!important;
+  cursor:pointer!important;
+  outline:none!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+}
+/* скрыть старую стрелку ▼ внутри span если есть */
+#scanner-display .scanner-arrow,
+#scanner-display svg,
+.custom-scanner-trigger .scanner-arrow{display:none!important}
+/* добавить стрелку через after */
+#scanner-display::after{
+  content:"";
+  display:inline-block;
+  width:12px;height:12px;flex-shrink:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.3)' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:center;
+}
