@@ -517,3 +517,6 @@ mark{background:#FEF9C3;color:var(--ink);border-radius:2px;padding:0 2px}
 .isp-in{background:#dcfce7;color:#166534}
 .isp-out{background:#fee2e2;color:#991b1b}
 .isp-transit{font-size:12px;color:var(--slate);opacity:.8}
+
+.isp-dist-name{font-size:13px;font-weight:600;color:var(--ink)}
+.isp-table td:first-child{display:flex;align-items:center;gap:8px}
