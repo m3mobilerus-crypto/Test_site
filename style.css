@@ -7,7 +7,7 @@ html{scroll-behavior:smooth;height:100%}
 body{overflow-y:auto;overflow-x:hidden;min-height:100vh;font-family:'Outfit',system-ui,sans-serif;background:linear-gradient(160deg,#151960 0%,#1E2171 45%,#2764E2 100%);background-attachment:fixed;color:#fff;font-size:15px;line-height:1.6}
 .app-shell{max-width:100%;margin:0;background:transparent;box-shadow:none;overflow:visible;min-height:100vh;border-radius:0}
 /* ─────── HEADER: Samsung dark ─────── */
-header{background:transparent;padding:0 32px;position:sticky;top:0;overflow:visible;z-index:200;border-bottom:1px solid rgba(255,255,255,.1)}
+header{background:transparent;padding:0 32px;position:relative;overflow:visible;z-index:200;border-bottom:1px solid rgba(255,255,255,.1)}
 .header-top{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:62px}
 .header-brand{display:flex;flex-direction:column;gap:1px;flex-shrink:0}
 .brand-logo{font-size:19px;font-weight:700;color:#fff;letter-spacing:.3px;font-family:'Outfit',sans-serif}
@@ -62,7 +62,7 @@ header{background:transparent;padding:0 32px;position:sticky;top:0;overflow:visi
 .btn-search:hover{background:rgba(255,255,255,.3)}
 .search-status{color:rgba(255,255,255,.45);font-size:13px;text-align:center}
 .main-layout{display:flex;gap:0;align-items:flex-start;background:transparent}
-.filters-sidebar{width:230px;flex-shrink:0;padding:20px 18px;background:transparent;border-right:1px solid rgba(255,255,255,.1);position:sticky;top:62px;height:calc(100vh - 62px);overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.15) transparent}
+.filters-sidebar{width:230px;flex-shrink:0;padding:20px 18px;background:transparent;border-right:1px solid rgba(255,255,255,.1);position:relative;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.15) transparent}
 .sidebar-title{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:14px}
 .filter-group{margin-bottom:14px}
 .filter-label{display:block;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:5px}
@@ -588,3 +588,13 @@ mark{background:#FEF9C3;color:var(--ink);border-radius:2px;padding:0 2px}
 
 .results-header > *{background:none!important;border:none!important;box-shadow:none!important;border-radius:0!important;padding:0!important}
 .sku-count{background:none!important;border:none!important;color:rgba(255,255,255,.4)!important;font-size:12px!important;font-weight:500!important;padding:0!important}
+
+/* ── Sidebar: убрать все рамки/фоны с заголовков фильтров ── */
+.sidebar-title{background:none!important;border:none!important;box-shadow:none!important;padding:0!important;border-radius:0!important;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:16px}
+.filter-group{background:none!important;border:none!important;box-shadow:none!important;padding:0!important;border-radius:0!important;margin-bottom:20px}
+.filter-label{background:none!important;border:none!important;box-shadow:none!important;padding:0!important;border-radius:0!important;display:block;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:4px}
+.filter-select{width:100%;padding:6px 22px 6px 0!important;border:none!important;border-bottom:1px solid rgba(255,255,255,.12)!important;border-radius:0!important;font-size:14px;font-family:'Outfit',sans-serif;color:#fff!important;background:transparent!important;cursor:pointer;outline:none;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.3)' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E")!important;background-repeat:no-repeat!important;background-position:right 2px center!important}
+.filter-select option{background:#1a1a4e;color:#fff}
+.btn-reset-filters{background:none!important;border:none!important;border-top:1px solid rgba(255,255,255,.1)!important;border-radius:0!important;padding:10px 0!important;color:rgba(255,255,255,.4)!important;font-size:12px!important;cursor:pointer;width:100%;text-align:left;letter-spacing:.05em}
+.btn-reset-filters:hover{color:#ff8f7a!important}
+.custom-scanner-trigger{background:transparent!important;border:none!important;border-bottom:1px solid rgba(255,255,255,.12)!important;border-radius:0!important;color:#fff!important;padding:6px 0!important;font-size:14px!important}
