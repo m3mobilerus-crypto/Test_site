@@ -803,3 +803,9 @@ div#scanner-display span#scanner-display-text {
   padding-left: 0 !important;
   margin-left: 0 !important;
 }
+
+/* ── acc-total: тёмный текст виден ── */
+.acc-total{background:rgba(255,255,255,.08)!important;border:1px solid rgba(255,255,255,.15)!important;border-radius:10px!important}
+.acc-total span{color:#fff!important;font-size:15px!important;font-weight:600!important}
+.acc-total strong{color:#ff8f7a!important;font-size:20px!important}
+.acc-warning{background:rgba(255,140,100,.15)!important;border:none!important;color:rgba(255,255,255,.8)!important;border-radius:8px!important}
