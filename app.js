@@ -898,10 +898,16 @@ function openLightbox(src){$('lightbox-img').src=src;$('lightbox').classList.add
 function closeLightbox(){$('lightbox').classList.remove('open');document.body.style.overflow='';}
 function debounce(fn,delay){let timer;return(...args)=>{clearTimeout(timer);timer=setTimeout(()=>fn(...args),delay);};}
 document.addEventListener('DOMContentLoaded',()=>{
-const bodyObserver=new MutationObserver(muts=>{muts.forEach(m=>{m.addedNodes.forEach(n=>{const allowed=['app-shell','toast','lightbox','floating-group'];const isAllowed=n.id&&allowed.includes(n.id)||n.className&&allowed.some(a=>n.className.includes(a));if(!isAllowed&&n.parentNode===document.body){try{document.body.removeChild(n);}catch(e){}}});});});
+const bodyObserver=new MutationObserver(muts=>{muts.forEach(m=>{m.addedNodes.forEach(n=>{const allowed=['app-shell','toast','lightbox','floating-group','inline-stock-popup'];const isAllowed=n.id&&allowed.includes(n.id)||n.className&&allowed.some(a=>n.className.includes(a));if(!isAllowed&&n.parentNode===document.body){try{document.body.removeChild(n);}catch(e){}}});});});
 bodyObserver.observe(document.body,{childList:true,subtree:false});
 loadData();
 applyTranslations();
+// Pre-load stock data in background so inline stock button works immediately
+setTimeout(() => {
+  if (!window.treolanLoaded) loadTreolanData();
+  if (!window.ocsLoaded) loadOcsData();
+  if (!window.m3StockLoaded) loadM3StockData();
+}, 2000);
 const searchInput=$('sku-search');
 searchInput.addEventListener('input',debounce(()=>{if(dataLoaded) searchBySKU();},300));
 searchInput.addEventListener('keydown',e=>{
