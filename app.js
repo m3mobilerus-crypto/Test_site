@@ -1881,6 +1881,7 @@ function showInlineStock(event, sku) {
   // Remove existing popup
   if (_inlineStockPopup) { _inlineStockPopup.remove(); _inlineStockPopup = null; }
 
+  const uniqId = 'isp-' + Date.now();
   const popup = document.createElement('div');
   popup.className = 'inline-stock-popup';
   popup.innerHTML = `
@@ -1889,7 +1890,7 @@ function showInlineStock(event, sku) {
       <span class="inline-stock-title">Наличие у дистрибьюторов</span>
       <button class="inline-stock-close" onclick="closeInlineStock()">✕</button>
     </div>
-    <div class="inline-stock-body" id="isp-body-${sku.replace(/[^a-z0-9]/gi,'_')}">
+    <div class="inline-stock-body" id="${uniqId}">
       <div class="inline-stock-loading">⏳ Загрузка...</div>
     </div>`;
   document.body.appendChild(popup);
@@ -1898,7 +1899,7 @@ function showInlineStock(event, sku) {
   // Position near button
   const btn = event.currentTarget;
   const rect = btn.getBoundingClientRect();
-  const pw = 340, ph = 200;
+  const pw = 360, ph = 220;
   let left = rect.left + window.scrollX;
   let top = rect.bottom + window.scrollY + 6;
   if (left + pw > window.innerWidth) left = window.innerWidth - pw - 12;
@@ -1911,7 +1912,7 @@ function showInlineStock(event, sku) {
     document.addEventListener('click', _inlineStockOutside, {once: true, capture: true});
   }, 10);
 
-  loadInlineStockData(sku, `isp-body-${sku.replace(/[^a-z0-9]/gi,'_')}`);
+  loadInlineStockData(sku, uniqId);
 }
 
 function _inlineStockOutside(e) {
@@ -1977,7 +1978,7 @@ function loadInlineStockData(sku, bodyId) {
       ? `<span class="isp-badge isp-in">${r.qty} шт.</span>`
       : `<span class="isp-badge isp-out">Нет</span>`;
     const transitBadge = r.transit > 0 ? `<span class="isp-transit">${r.transit}</span>` : '—';
-    html += `<tr><td><span class="isp-dot" style="background:${r.color}"></span>${r.dist}</td><td>${badge}</td><td>${transitBadge}</td></tr>`;
+    html += `<tr><td><span class="isp-dot" style="background:${r.color}"></span><span class="isp-dist-name">${r.dist}</span></td><td>${badge}</td><td>${transitBadge}</td></tr>`;
   });
   html += '</tbody></table>';
   bodyEl.innerHTML = html;
