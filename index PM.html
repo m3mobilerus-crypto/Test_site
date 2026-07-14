@@ -1,0 +1,1607 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Point Mobile / Builder</title>
+  <link rel="icon" href="data:,">
+  <style>
+    /* ========== СТИЛЬ — ЧЕРНО-КРАСНЫЙ ========== */
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
+    :root {
+      --pm-black: #1a1a1a;
+      --pm-red: #E31837;
+      --pm-red-dark: #B8102A;
+      --pm-white: #FFFFFF;
+      --pm-gray: #888888;
+      --pm-gray-light: #2A2A2A;
+      --pm-border: #333333;
+      --radius: 10px;
+      --radius-lg: 16px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,.3);
+      --shadow-md: 0 4px 16px rgba(0,0,0,.4);
+      --shadow-lg: 0 12px 40px rgba(0,0,0,.5);
+      --transition: .2s ease;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth;height:100%}
+    body{
+      overflow-y:auto;
+      overflow-x:hidden;
+      min-height:100vh;
+      font-family:'Outfit',system-ui,sans-serif;
+      background: #0d0d0d;
+      background-image: 
+        radial-gradient(circle at 20% 20%, rgba(227, 24, 55, 0.08) 0%, transparent 60%),
+        radial-gradient(circle at 80% 80%, rgba(227, 24, 55, 0.05) 0%, transparent 60%),
+        linear-gradient(180deg, #0d0d0d 0%, #1a1a1a 100%);
+      background-attachment:fixed;
+      color:#fff;
+      font-size:15px;
+      line-height:1.6;
+    }
+    .app-shell{max-width:100%;margin:0;background:transparent;box-shadow:none;overflow:visible;min-height:100vh;border-radius:0}
+
+    /* ===== HEADER ===== */
+    header{background:rgba(0,0,0,0.85);backdrop-filter:blur(12px);padding:0 32px;position:relative;overflow:visible;z-index:200;border-bottom:2px solid var(--pm-red)}
+    .header-top{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:62px}
+    .header-brand{display:flex;flex-direction:column;gap:1px;flex-shrink:0}
+    .brand-logo{font-size:19px;font-weight:700;color:#fff;letter-spacing:.3px;font-family:'Outfit',sans-serif}
+    .brand-logo span{color:rgba(255,255,255,.35);font-weight:300}
+    .brand-logo .pm-red{color:var(--pm-red)}
+    .header-title{font-size:10px;color:rgba(255,255,255,.4);font-weight:400;letter-spacing:.06em;text-transform:uppercase}
+
+    .header-nav{display:flex;align-items:center;flex:1;justify-content:center}
+    .nav-btn{background:none;border:none;border-bottom:2px solid transparent;color:rgba(255,255,255,.6);padding:0 14px;cursor:pointer;font-size:14px;font-weight:500;font-family:'Outfit',sans-serif;transition:.15s;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;height:62px}
+    .nav-btn:hover{color:#fff;border-bottom-color:rgba(255,255,255,.3)}
+    .nav-btn--active,.nav-btn.active{color:#fff;border-bottom-color:var(--pm-red);font-weight:600}
+    .nav-ico{width:14px;height:14px;flex-shrink:0;opacity:.7}
+    .nav-chevron{width:11px;height:11px;flex-shrink:0;transition:transform .2s;opacity:.5}
+    .nav-dropdown.open .nav-chevron{transform:rotate(180deg)}
+    .nav-dropdown{position:relative;display:inline-flex}
+    .nav-dropdown-menu{display:none;position:absolute;top:100%;left:0;min-width:190px;background:#1a1a1a;border-radius:10px;box-shadow:0 12px 40px rgba(0,0,0,.6);overflow:hidden;z-index:9999;border:1px solid #333}
+    .nav-dropdown-menu.open{display:block;animation:dropDown .15s ease}
+    .nav-dropdown-menu--right{left:auto;right:0}
+    @keyframes dropDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+    .nav-drop-item{display:flex;align-items:center;width:100%;padding:11px 18px;border:none;background:none;cursor:pointer;font-size:14px;font-weight:500;color:#eee;font-family:'Outfit',sans-serif;transition:background .12s;text-align:left;gap:8px}
+    .nav-drop-item:hover{background:#2a2a2a}
+    .nav-drop-item.active{background:var(--pm-red);color:#fff;font-weight:600}
+    .nav-drop-divider{height:1px;background:#333;margin:4px 0}
+    .stock-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+    .stock-dot--ocs{background:#10b981}
+    .stock-dot--treolan{background:#3b82f6}
+    .stock-dot--m3{background:#f59e0b}
+
+    .header-icon-btns{display:flex;align-items:center;gap:6px;flex-shrink:0}
+    .icon-btn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#fff;width:40px;height:40px;border-radius:50%;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:.15s;flex-direction:column;gap:2px;font-family:inherit;position:relative}
+    .icon-btn svg{width:18px;height:18px}
+    .icon-btn:hover{background:rgba(255,255,255,.15);border-color:var(--pm-red)}
+    .icon-btn-label{font-size:8px;font-weight:700;line-height:1;letter-spacing:.04em}
+    .lang-item{justify-content:flex-start;gap:8px}
+    .lang-flag{font-size:16px}
+    .lang-code{margin-left:auto;font-size:11px;opacity:.4;font-weight:600}
+
+    /* ===== CATEGORY PILLS ===== */
+    .cat-strip{display:flex;flex-wrap:wrap;gap:6px;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:14px}
+    .cat-pill{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.6);padding:5px 13px;border-radius:20px;cursor:pointer;font-size:12px;font-weight:500;font-family:'Outfit',sans-serif;transition:.15s}
+    .cat-pill:hover{background:rgba(255,255,255,.12);color:#fff}
+    .cat-pill.active{background:var(--pm-red);color:#fff;border-color:var(--pm-red);font-weight:700}
+
+    /* ===== SEARCH ===== */
+    .search-bar{padding:20px 32px;background:transparent;border:none;display:flex;flex-direction:column;gap:12px;align-items:center}
+    .search-row{display:flex;width:100%;max-width:580px;border:1.5px solid rgba(255,255,255,.15);border-radius:10px;overflow:hidden;background:rgba(255,255,255,.06);transition:.2s}
+    .search-row:focus-within{border-color:var(--pm-red);box-shadow:0 0 0 3px rgba(227,24,55,.15)}
+    .search-row input{flex:1;padding:12px 16px;border:none;background:transparent;font-size:15px;font-family:inherit;outline:none;color:#fff}
+    .search-row input::placeholder{color:rgba(255,255,255,.3)}
+    .btn-search{background:var(--pm-red);border:none;color:#fff;padding:0 22px;cursor:pointer;font-size:15px;font-weight:600;font-family:'Outfit',sans-serif;transition:.15s}
+    .btn-search:hover{background:var(--pm-red-dark)}
+    .search-status{color:rgba(255,255,255,.4);font-size:13px;text-align:center}
+
+    /* ===== MAIN LAYOUT ===== */
+    .main-layout{display:flex;gap:0;align-items:flex-start;background:transparent}
+    .filters-sidebar{width:230px;flex-shrink:0;padding:20px 18px;background:rgba(0,0,0,.4);border-right:1px solid rgba(255,255,255,.06);position:relative;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.1) transparent}
+    .sidebar-title{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:14px}
+    .filter-group{margin-bottom:14px}
+    .filter-label{display:block;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:5px}
+    .filter-select{width:100%;padding:8px 10px;border:1px solid rgba(255,255,255,.12);border-radius:8px;font-size:13px;font-family:'Outfit',sans-serif;color:#fff;background:rgba(255,255,255,.06);cursor:pointer;transition:.15s;outline:none}
+    .filter-select:focus{outline:none;border-color:var(--pm-red);box-shadow:0 0 0 3px rgba(227,24,55,.1)}
+    .filter-select option{background:#1a1a1a;color:#fff}
+    .btn-reset{width:100%;padding:10px 16px;background:var(--pm-red);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:13.5px;font-family:inherit;transition:var(--transition);margin-top:4px}
+    .btn-reset:hover{background:var(--pm-red-dark)}
+
+    /* ===== RESULTS ===== */
+    .results-area{flex:1;padding:20px 24px;min-width:0;background:transparent}
+    .results-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px}
+    .results-heading{font-size:13px;font-weight:600;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.08em}
+    .results-count{font-size:12px;color:rgba(255,255,255,.3);font-weight:500}
+
+    .result-card{border:none;border-radius:12px;background:rgba(255,255,255,.05);margin-bottom:12px;overflow:hidden;transition:background .2s,border-color .2s,transform .2s;position:relative;border:1px solid rgba(255,255,255,.06)}
+    .result-card:hover{background:rgba(255,255,255,.09);transform:translateY(-2px);border-color:var(--pm-red)}
+    .card-inner{padding:18px 20px 18px 24px}
+    .card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px}
+    .card-meta{flex:1;min-width:0}
+    .sku-code{font-family:'DM Mono',monospace;font-size:17px;font-weight:700;color:#fff;letter-spacing:.02em}
+    .sku-price{font-size:17px;font-weight:700;color:var(--pm-red);margin:4px 0}
+    .sku-price.no-price{font-size:14px;color:#666;font-weight:400}
+    .card-gallery{flex-shrink:0;display:flex;flex-direction:column;gap:6px;align-items:center}
+    .gallery-main{width:180px;height:180px;border-radius:10px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.9);object-fit:contain;padding:8px;cursor:zoom-in;transition:.2s}
+    .gallery-main:hover{border-color:var(--pm-red);box-shadow:0 0 0 3px rgba(227,24,55,.1)}
+    .sku-desc-box{font-size:14px;color:rgba(255,255,255,.6);background:rgba(0,0,0,.3);border-radius:8px;padding:10px 14px;margin-top:10px;line-height:1.5;max-width:700px;border:none}
+
+    .badge-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+    .badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+    .badge.android-ready{background:#DCFCE7;color:#15803D}
+    .badge.enterprise{background:#DBEAFE;color:#1D4ED8}
+    .badge.ip-badge{background:#FEF3C7;color:#92400E}
+    .badge.lte{background:#EDE9FE;color:#6D28D9}
+    .badge.frozen{background:#CFFAFE;color:#155E75}
+    .badge.new-coming{background:#FFE4E4;color:#DC2626;border:1.5px solid #FCA5A5;animation:pulse-new 1.5s ease-in-out infinite}
+    @keyframes pulse-new{0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,.3)}50%{box-shadow:0 0 0 6px rgba(220,38,38,0)}}
+
+    .card-actions{display:flex;gap:8px;flex-wrap:wrap;padding-top:4px}
+    .card-actions .btn-action{flex:1;min-width:0;justify-content:center}
+    .btn-action{display:inline-flex;align-items:center;gap:6px;padding:10px 14px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;font-family:inherit;transition:var(--transition);border:1.5px solid transparent;white-space:nowrap}
+    .btn-primary{background:rgba(227,24,55,.15);color:#fff;border:1.5px solid rgba(227,24,55,.3)}
+    .btn-primary:hover{background:rgba(227,24,55,.25)}
+    .btn-outline{background:transparent;color:rgba(255,255,255,.7);border:1.5px solid rgba(255,255,255,.15)}
+    .btn-outline:hover{background:rgba(255,255,255,.08);color:#fff}
+    .btn-compare{background:transparent;color:rgba(255,255,255,.6);border:1.5px solid rgba(255,255,255,.12)}
+    .btn-compare:hover{background:rgba(255,255,255,.08);color:#fff}
+    .btn-compare.in-compare{background:rgba(227,24,55,.2);color:#fff;border-color:var(--pm-red)}
+
+    .no-results{text-align:center;padding:60px 20px;color:#666}
+    .no-results .icon{font-size:48px;margin-bottom:12px}
+
+    /* ===== ACCESSORIES ===== */
+    .accessory-panel{margin-top:24px;border:1px solid #333;border-radius:var(--radius-lg);background:#1a1a1a;overflow:hidden;display:none}
+    .acc-header{background:var(--pm-red);color:#fff;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+    .acc-header h3{font-size:15px;font-weight:600}
+    .acc-header span{font-family:'DM Mono',monospace;font-size:14px;opacity:.85}
+    .acc-warning{background:rgba(227,24,55,.15);border-bottom:1px solid rgba(227,24,55,.2);padding:10px 20px;font-size:13px;color:var(--pm-red);font-weight:600}
+    .acc-body{padding:16px 20px}
+    .acc-sku-info{font-size:13px;color:#888;margin-bottom:14px}
+    .acc-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;cursor:pointer;transition:var(--transition);border:1.5px solid transparent}
+    .acc-item:hover{background:#2a2a2a}
+    .acc-item.checked{background:rgba(227,24,55,.12);border-color:rgba(227,24,55,.3)}
+    .acc-checkbox{width:18px;height:18px;accent-color:var(--pm-red);flex-shrink:0;cursor:pointer}
+    .acc-info{flex:1;min-width:0}
+    .acc-sku-code{font-family:'DM Mono',monospace;font-size:13px;font-weight:500;color:#fff}
+    .acc-desc{font-size:12.5px;color:#888;margin-top:1px}
+    .acc-price{font-weight:700;color:var(--pm-red);font-size:14px;white-space:nowrap;flex-shrink:0}
+    .acc-total{margin-top:16px;padding:14px 16px;background:#2a2a2a;border:1px solid #333;border-radius:10px;display:flex;justify-content:space-between;align-items:center;font-size:15px}
+    .acc-total strong{font-size:20px;color:var(--pm-red);font-weight:700}
+    .btn-add-spec{width:100%;padding:13px 20px;background:var(--pm-red);color:#fff;border:none;border-radius:10px;cursor:pointer;font-weight:700;font-size:15px;font-family:inherit;transition:var(--transition);margin-top:14px}
+    .btn-add-spec:hover{background:var(--pm-red-dark)}
+
+    /* ===== SPECIFICATION ===== */
+    .spec-table-section{margin:0 24px 24px;border:1px solid #333;border-radius:var(--radius-lg);overflow:hidden;display:none}
+    .spec-table-header{background:var(--pm-red);color:#fff;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+    .spec-table-header h3{font-size:15px;font-weight:600}
+    .spec-actions{display:flex;gap:8px;flex-wrap:wrap}
+    .btn-sm{padding:7px 14px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff;border-radius:6px;cursor:pointer;font-size:12.5px;font-weight:600;font-family:inherit;transition:var(--transition);white-space:nowrap}
+    .btn-sm:hover{background:rgba(255,255,255,.15)}
+    .btn-sm.danger{border-color:rgba(227,24,55,.5);background:rgba(227,24,55,.15)}
+    .btn-sm.danger:hover{background:rgba(227,24,55,.3)}
+    #finalConfigTable{width:100%;border-collapse:collapse;font-size:13.5px;color:#fff}
+    #finalConfigTable thead th{background:#2a2a2a;color:#888;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:10px 14px;text-align:left;border-bottom:1px solid #333;white-space:nowrap}
+    #finalConfigTable tbody td{padding:10px 14px;border-bottom:1px solid #2a2a2a;vertical-align:middle;color:#ddd}
+    #finalConfigTable tbody tr:last-child td{border-bottom:none}
+    #finalConfigTable tbody tr:hover{background:#2a2a2a}
+    #finalConfigTable tbody tr.acc-row td{background:rgba(255,255,255,.03)}
+    #finalConfigTable tbody tr.acc-row td:first-child{padding-left:28px}
+    .tag-base{background:rgba(227,24,55,.2);color:var(--pm-red);padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700}
+    .tag-acc{background:rgba(139,92,246,.2);color:#a78bfa;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700}
+    .qty-input{width:56px;padding:5px 8px;border:1.5px solid #333;border-radius:6px;font-size:13px;font-family:'DM Mono',monospace;text-align:center;color:#fff;background:#2a2a2a;transition:var(--transition)}
+    .qty-input:focus{outline:none;border-color:var(--pm-red)}
+    .remove-row-btn{background:none;border:none;color:#666;cursor:pointer;font-size:16px;padding:4px;border-radius:4px;transition:var(--transition);line-height:1}
+    .remove-row-btn:hover{color:var(--pm-red);background:rgba(227,24,55,.15)}
+    .spec-total-row{background:#2a2a2a;font-weight:700}
+    .spec-total-row td{padding:12px 14px !important}
+    .spec-grand-total{font-size:18px;color:var(--pm-red);font-weight:700}
+
+    /* ===== MODALS ===== */
+    .modal-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:2000;backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:16px}
+    .modal-backdrop.open{display:flex}
+    .modal-box{background:#1a1a1a;border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);width:100%;max-width:520px;max-height:90vh;overflow-y:auto;position:relative;animation:modalIn .2s ease;border:1px solid #333}
+    @keyframes modalIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+    .modal-box.wide{max-width:1100px}
+    .modal-head{padding:20px 24px 16px;border-bottom:1px solid #333;display:flex;justify-content:space-between;align-items:center}
+    .modal-head h2{font-size:17px;font-weight:700;color:#fff}
+    .modal-close{background:#2a2a2a;border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;color:#888;transition:var(--transition);flex-shrink:0}
+    .modal-close:hover{background:rgba(227,24,55,.2);color:var(--pm-red)}
+    .modal-body{padding:20px 24px 24px;color:#ddd}
+    .compare-table-wrap{overflow-x:auto;border-radius:10px;border:1px solid #333}
+    .compare-table{width:100%;border-collapse:collapse;font-size:14px;min-width:600px;color:#ddd}
+    .compare-table th{background:var(--pm-red);color:#fff;padding:14px 16px;text-align:left;font-size:13px;font-weight:600;white-space:nowrap;position:sticky;top:0}
+    .compare-table td{padding:10px 16px;border-bottom:1px solid #2a2a2a;vertical-align:top;font-size:13px}
+    .compare-table tr:last-child td{border-bottom:none}
+    .compare-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+    .compare-table td.diff{background:rgba(227,24,55,.15);font-weight:600;color:var(--pm-red)}
+    .compare-table td.prop-name{font-weight:600;color:#888;font-size:12px;background:#2a2a2a !important;text-transform:uppercase;letter-spacing:.04em}
+
+    /* ===== FLOATING BUTTONS ===== */
+    .floating-group{position:fixed;bottom:24px;right:24px;display:flex;flex-direction:column;gap:10px;align-items:flex-end;z-index:1000}
+    .btn-float{display:none;align-items:center;gap:8px;padding:12px 20px;border:none;border-radius:10px;cursor:pointer;font-weight:700;font-size:14px;font-family:inherit;box-shadow:var(--shadow-lg);transition:var(--transition);white-space:nowrap}
+    .btn-float:hover{transform:translateY(-2px)}
+    .btn-float.visible{display:flex}
+    .btn-float-spec{background:var(--pm-red);color:#fff}
+    .btn-float-spec:hover{background:var(--pm-red-dark)}
+    .btn-float-compare{background:var(--pm-red);color:#fff}
+    .btn-float-compare:hover{background:var(--pm-red-dark)}
+    .btn-float-addspec{background:var(--pm-red);color:#fff}
+    .btn-float-addspec:hover{background:var(--pm-red-dark)}
+    .float-badge{background:rgba(255,255,255,.2);border-radius:12px;padding:2px 8px;font-size:12px;font-weight:700}
+
+    #back-to-top{position:fixed;bottom:28px;left:28px;display:none;background:var(--pm-red);color:#fff;border:2px solid var(--pm-red-dark);width:56px;height:56px;border-radius:14px;align-items:center;justify-content:center;cursor:pointer;font-size:13px;font-weight:900;z-index:999;transition:var(--transition);box-shadow:0 4px 16px rgba(227,24,55,.3);flex-direction:column;gap:2px;letter-spacing:.5px}
+    #back-to-top:hover{background:var(--pm-red-dark);transform:translateY(-3px)}
+    #back-to-top.visible{display:flex}
+
+    .app-footer{background:#0d0d0d;border-top:1px solid #2a2a2a;padding:16px 24px;font-size:13px;color:#666;text-align:center}
+    .app-footer a{color:var(--pm-red);text-decoration:none}
+    .app-footer a:hover{text-decoration:underline}
+
+    .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:#1a1a1a;color:#fff;padding:12px 22px;border-radius:10px;font-size:14px;font-weight:500;box-shadow:var(--shadow-lg);z-index:3000;opacity:0;transition:opacity .25s ease,transform .25s ease;white-space:nowrap;pointer-events:none;border:1px solid #333}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+    .lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:5000;align-items:center;justify-content:center;cursor:zoom-out;backdrop-filter:blur(8px)}
+    .lightbox.open{display:flex}
+    .lightbox img{max-width:90vw;max-height:85vh;object-fit:contain;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.8)}
+    .lightbox-close{position:fixed;top:20px;right:24px;background:rgba(255,255,255,.1);border:none;color:#fff;font-size:28px;width:44px;height:44px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s}
+    .lightbox-close:hover{background:rgba(255,255,255,.2)}
+
+    /* ===== DECODE PANEL ===== */
+    .sku-decode-panel{border-top:1px solid rgba(255,255,255,.06);padding:14px 16px 16px;background:rgba(0,0,0,.2)}
+    .decode-blocks{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+    .decode-block{border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:8px 12px;min-width:68px;text-align:center;background:rgba(255,255,255,.04)}
+    .decode-block-letter{font-size:22px;font-weight:700;font-family:'DM Mono',monospace;line-height:1;margin-bottom:4px;color:#fff}
+    .decode-block-label{font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3)}
+    .decode-block-value{font-size:11px;font-weight:600;color:rgba(255,255,255,.7);margin-top:2px}
+    .decode-block.is-model .decode-block-letter{color:var(--pm-red)}
+    .decode-block.is-model .decode-block-label{color:var(--pm-red)}
+    .decode-block.is-lte .decode-block-letter{color:#34d399}
+    .decode-block.is-lte .decode-block-label{color:#34d399}
+    .decode-string-row{font-size:12px;color:#888;line-height:1.6;border-top:1px solid rgba(255,255,255,.06);padding-top:10px;margin-top:4px}
+    .decode-string-row strong{color:#ccc}
+
+    /* ===== INLINE STOCK ===== */
+    .inline-stock-popup{position:fixed!important;z-index:99999!important;width:360px!important;background:#1a1a1a!important;border-radius:14px!important;box-shadow:0 20px 60px rgba(0,0,0,.6)!important;border:1px solid #333!important;overflow:hidden!important}
+    .inline-stock-header{display:flex;align-items:center;gap:8px;padding:12px 14px 10px;border-bottom:1px solid #333;background:var(--pm-red);border-radius:14px 14px 0 0;color:#fff}
+    .inline-stock-sku{font-family:'DM Mono',monospace;font-size:12px;font-weight:500;background:rgba(255,255,255,.15);padding:2px 8px;border-radius:4px;flex-shrink:0}
+    .inline-stock-title{font-size:12px;font-weight:500;opacity:.8;flex:1}
+    .inline-stock-close{background:rgba(255,255,255,.15);border:none;color:#fff;width:22px;height:22px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;line-height:1;flex-shrink:0;transition:.15s}
+    .inline-stock-close:hover{background:rgba(255,255,255,.3)}
+    .inline-stock-body{padding:12px;background:#1a1a1a}
+    .isp-no-data{color:#888;text-align:center;padding:12px;font-size:13px;line-height:1.5}
+
+    /* ===== SCANNER DROPDOWN ===== */
+    .custom-scanner-dropdown{width:100%!important;position:relative}
+    #scanner-options{position:absolute;top:calc(100% + 2px);left:0;width:100%;min-width:160px;background:#1a1a1a;border:1.5px solid #333;border-radius:10px;box-shadow:0 8px 32px rgba(0,0,0,.5);z-index:1000;overflow:hidden;max-height:280px;overflow-y:auto}
+    .scanner-opt{padding:9px 14px;cursor:pointer;font-size:14px;color:#ddd;background:#1a1a1a;transition:background .1s;white-space:nowrap}
+    .scanner-opt:hover{background:#2a2a2a}
+    .scanner-opt.active{background:rgba(227,24,55,.2);font-weight:600;color:#fff}
+    .scanner-opt.active::before{content:'✓ ';color:var(--pm-red)}
+    #scanner-display{width:100%!important;box-sizing:border-box!important;padding:6px 22px 6px 0!important;margin:0!important;border:none!important;border-bottom:1px solid rgba(255,255,255,.08)!important;border-radius:0!important;background:transparent!important;color:#fff!important;font-size:14px!important;font-weight:700!important;font-family:'Outfit',sans-serif!important;text-align:left!important;cursor:pointer!important;outline:none!important;display:flex!important;align-items:center!important;justify-content:space-between!important}
+    #scanner-display::after{content:"";display:inline-block;width:12px;height:12px;flex-shrink:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.3)' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:center}
+
+    .acc-result-card{border:1px solid rgba(255,255,255,.06);border-radius:14px;background:rgba(255,255,255,.04);margin-bottom:12px;overflow:hidden;transition:.2s;position:relative}
+    .acc-result-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--pm-red);border-radius:4px 0 0 4px}
+    .acc-result-card:hover{background:rgba(255,255,255,.08);border-color:var(--pm-red)}
+    .acc-result-card .card-inner{padding:18px 20px 18px 24px}
+    .acc-tag{display:inline-flex;align-items:center;gap:5px;background:rgba(227,24,55,.15);color:var(--pm-red);padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+    .acc-result-sku{font-family:'DM Mono',monospace;font-size:20px;font-weight:500;color:#fff;letter-spacing:-.02em;line-height:1.2;margin-bottom:3px}
+    .acc-result-desc{font-size:14px;color:#888;margin-bottom:10px;line-height:1.5}
+    .acc-result-price{font-size:22px;font-weight:700;color:var(--pm-red)}
+    .acc-compatible-models{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+    .acc-compat-badge{background:rgba(227,24,55,.12);color:var(--pm-red);border:1px solid rgba(227,24,55,.2);padding:3px 9px;border-radius:6px;font-size:11px;font-weight:700}
+    .search-mode-indicator{display:flex;align-items:center;gap:8px;padding:8px 14px;background:rgba(227,24,55,.1);border:1px solid rgba(227,24,55,.2);border-radius:8px;font-size:13px;color:var(--pm-red);font-weight:500;margin-bottom:14px}
+    .search-mode-indicator.acc-mode{background:rgba(139,92,246,.1);border-color:rgba(139,92,246,.2);color:#a78bfa}
+    .search-mode-indicator.mixed-mode{background:rgba(227,24,55,.08);border-color:rgba(227,24,55,.15)}
+    .btn-clear-search{margin-left:auto;background:none;border:none;cursor:pointer;color:inherit;opacity:.6;font-size:16px;line-height:1;padding:0 2px}
+    .btn-clear-search:hover{opacity:1}
+
+    .btn-excel-img{border-color:rgba(34,197,94,.3)!important;background:rgba(34,197,94,.1)!important;}.btn-excel-img:hover{background:rgba(34,197,94,.2)!important;}
+
+    .sc-grid{display:flex;gap:16px;flex-wrap:wrap;margin-top:8px}
+    .sc-item{flex:1;min-width:160px;border:1.5px solid #333;border-radius:12px;overflow:hidden;transition:var(--transition)}
+    .sc-item:hover{border-color:var(--pm-red);box-shadow:var(--shadow-md);transform:translateY(-2px)}
+    .sc-item a{display:flex;align-items:center;justify-content:center;padding:24px 16px}
+    .sc-item img{max-width:160px;height:auto}
+
+    .form-group{margin-bottom:16px}
+    .form-label{display:block;font-size:13px;font-weight:600;color:#888;margin-bottom:6px}
+    .form-input,.form-textarea{width:100%;padding:10px 14px;border:1.5px solid #333;border-radius:8px;font-size:14px;font-family:inherit;color:#fff;background:#2a2a2a;transition:var(--transition)}
+    .form-input:focus,.form-textarea:focus{outline:none;border-color:var(--pm-red);box-shadow:0 0 0 3px rgba(227,24,55,.1)}
+    .form-textarea{height:90px;resize:vertical}
+    .form-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
+    .btn-cancel{padding:10px 20px;background:#2a2a2a;color:#ddd;border:1.5px solid #333;border-radius:8px;cursor:pointer;font-weight:600;font-size:14px;font-family:inherit;transition:var(--transition)}
+    .btn-cancel:hover{background:#3a3a3a}
+    .btn-submit{padding:10px 20px;background:var(--pm-red);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:14px;font-family:inherit;transition:var(--transition)}
+    .btn-submit:hover{background:var(--pm-red-dark)}
+
+    .sku-stock-btn{background:rgba(255,255,255,.08)!important;border:1px solid rgba(255,255,255,.15)!important;color:#ccc!important;padding:3px 10px!important;border-radius:6px!important;cursor:pointer!important;font-size:11px!important;font-weight:600!important;font-family:inherit!important;transition:.15s!important;display:inline-flex!important;align-items:center!important;gap:4px!important;white-space:nowrap!important}
+    .sku-stock-btn:hover{background:rgba(255,255,255,.15)!important;border-color:var(--pm-red)!important;color:#fff!important}
+    .sku-stock-btn svg{opacity:.6!important;width:12px!important;height:12px!important}
+
+    .btn-float-clear-compare{display:none;align-items:center;justify-content:center;width:32px;height:32px;background:rgba(227,24,55,.2);border:1px solid rgba(227,24,55,.3);color:#fca5a5;border-radius:50%;cursor:pointer;font-size:14px;font-weight:700;transition:.15s;flex-shrink:0}
+    .btn-float-clear-compare.visible{display:flex}
+    .btn-float-clear-compare:hover{background:rgba(227,24,55,.4);color:#fff}
+
+    .acc-required-badge{display:inline-flex;align-items:center;gap:4px;margin-top:5px;background:rgba(227,24,55,.12);border:1px solid rgba(227,24,55,.2);color:var(--pm-red);border-radius:6px;padding:3px 8px;font-size:11px;font-weight:700}
+
+    @media(max-width:860px){.app-shell{border-radius:0;margin-top:0}.main-layout{flex-direction:column}.filters-sidebar{width:100%;max-height:none;position:static;border-right:none;border-bottom:1px solid rgba(255,255,255,.06)}.gallery-main{width:150px;height:150px}}
+    @media(max-width:520px){header{padding:0 16px}.search-bar{padding:14px 16px}.results-area{padding:16px}.gallery-main{width:100px;height:100px}.gallery-thumbs{display:none}.floating-group{right:12px;bottom:12px}.btn-float{font-size:12px;padding:10px 14px}}
+  </style>
+</head>
+<body>
+<div class="app-shell" id="appShell">
+
+<header>
+  <div class="header-top">
+    <div class="header-brand">
+      <div class="brand-logo">POINT <span class="pm-red">MOBILE</span> <span>/ BUILDER</span></div>
+      <div class="header-title" data-i18n="configurator_subtitle">Конфигуратор подбора</div>
+    </div>
+    <nav class="header-nav">
+      <div class="nav-dropdown" id="cat-dropdown">
+        <button class="nav-btn nav-btn--active" id="cat-dropdown-btn" onclick="toggleNavDropdown('cat-dropdown')">
+          <span id="cat-label" data-i18n="all_devices">Все модели</span>
+          <svg class="nav-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="nav-dropdown-menu" id="cat-dropdown-menu">
+          <button class="nav-drop-item active" data-cat="all" onclick="selectCategory('all','Все модели',this)" data-i18n-val="all_devices">Все модели</button>
+          <button class="nav-drop-item" data-cat="enterprise" onclick="selectCategory('enterprise','Enterprise',this)">Enterprise</button>
+          <button class="nav-drop-item" data-cat="retail" onclick="selectCategory('retail','Retail',this)">Retail</button>
+          <button class="nav-drop-item" data-cat="wearable" onclick="selectCategory('wearable','Wearable',this)">Wearable</button>
+        </div>
+      </div>
+      <button class="nav-btn" data-i18n="btn_site" onclick="window.open('https://pointmobile.com','_blank')">
+        <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>Сайт
+      </button>
+      <button class="nav-btn" data-i18n="btn_service" onclick="showModal('service-centers-modal')">
+        <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>Сервис
+      </button>
+      <button class="nav-btn" data-i18n="btn_tech_docs" onclick="window.open('https://pointmobile.com/support','_blank')">
+        <svg class="nav-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Tech Docs
+      </button>
+    </nav>
+    <a href="#" class="nav-btn" style="text-decoration:none" data-i18n="btn_dont_know">Я не знаю, что выбрать</a>
+    <div class="header-icon-btns">
+      <div class="nav-dropdown" id="lang-dropdown">
+        <button class="icon-btn" id="lang-dropdown-btn" onclick="toggleNavDropdown('lang-dropdown')" title="Language">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>
+          <span class="icon-btn-label" id="lang-current">RU</span>
+        </button>
+        <div class="nav-dropdown-menu nav-dropdown-menu--right" id="lang-dropdown-menu">
+          <button class="nav-drop-item lang-item active" onclick="selectLang('ru',this)"><span class="lang-flag">🇷🇺</span> Русский <span class="lang-code">RU</span></button>
+          <button class="nav-drop-item lang-item" onclick="selectLang('en',this)"><span class="lang-flag">🇬🇧</span> English <span class="lang-code">EN</span></button>
+        </div>
+      </div>
+      <button class="icon-btn" onclick="showModal('contacts-modal')" title="Контакты">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="search-bar">
+  <div class="search-row">
+    <input type="text" id="sku-search" placeholder="Поиск по SKU устройства или аксессуара…" data-i18n-placeholder="search_placeholder" autocomplete="off">
+    <button data-i18n="btn_search" class="btn-search" onclick="searchBySKU()">
+      <svg class="ico" viewBox="0 0 24 24" style="width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.5;vertical-align:middle;margin-right:4px"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>Найти
+    </button>
+  </div>
+  <div class="search-status" id="search-status">Загрузка данных...</div>
+</div>
+
+<div class="main-layout">
+  <aside class="filters-sidebar">
+    <div class="sidebar-title" data-i18n="filters">Фильтры</div>
+    <div class="cat-strip">
+      <button class="cat-pill active" data-cat="all" onclick="selectCatPill('all',this)">Все модели</button>
+      <button class="cat-pill" data-cat="enterprise" onclick="selectCatPill('enterprise',this)">Enterprise</button>
+      <button class="cat-pill" data-cat="retail" onclick="selectCatPill('retail',this)">Retail</button>
+      <button class="cat-pill" data-cat="wearable" onclick="selectCatPill('wearable',this)">Wearable</button>
+    </div>
+    <div class="filter-group"><label class="filter-label" data-i18n="filter_model">Модель</label>
+      <select id="model-select" class="filter-select" onchange="updateAndroidOptions();filterSKU();"><option value="" data-i18n="all_models">Все модели</option></select>
+    </div>
+    <div class="filter-group"><label class="filter-label" data-i18n="filter_android">Android</label>
+      <select id="android-select" class="filter-select" onchange="updateScannerOptions();filterSKU();"><option value="" data-i18n="all_android">Любая версия</option></select>
+    </div>
+    <div class="filter-group" id="scanner-filter-group"><label class="filter-label" data-i18n="filter_scanner">Сканер</label>
+      <div id="scanner-dropdown" class="custom-scanner-dropdown">
+        <div id="scanner-display" class="filter-select custom-scanner-trigger" onclick="toggleScannerDropdown()" style="cursor:pointer;user-select:none;display:flex;align-items:center;justify-content:space-between;padding-top:6px;padding-bottom:6px;padding-left:0;padding-right:22px;margin:0;border:none;border-bottom:1px solid rgba(255,255,255,.08);background:transparent;color:#fff;font-size:14px;font-weight:700;width:100%;box-sizing:border-box;border-radius:0">
+          <span id="scanner-display-text" data-i18n="all_scanners">Любой сканер</span>
+          <svg style="width:12px;height:12px;flex-shrink:0;opacity:.35" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div id="scanner-options" class="scanner-options-list" style="display:none"></div>
+      </div>
+      <input type="hidden" id="scanner-select" value="">
+    </div>
+    <div class="filter-group"><label class="filter-label" data-i18n="filter_memory">Память</label>
+      <select id="memory-select" class="filter-select" onchange="updateButtonsOptions();filterSKU();"><option value="" data-i18n="all_memory">Любая память</option></select>
+    </div>
+    <div class="filter-group"><label class="filter-label" data-i18n="filter_lte">LTE</label>
+      <select id="lte-select" class="filter-select" onchange="filterSKU();"><option value="" data-i18n="lte_any">Не важно</option><option value="YES" data-i18n="lte_yes">Есть LTE</option><option value="NO" data-i18n="lte_no">Нет LTE</option></select>
+    </div>
+    <button data-i18n="btn_clear_filters" class="btn-reset" onclick="resetFilters()">
+      <svg style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.5;vertical-align:middle;margin-right:4px" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Сбросить фильтры
+    </button>
+  </aside>
+  <div class="results-area">
+    <div class="results-header"><div class="results-heading" data-i18n="results_heading">Результаты подбора</div><div class="results-count" id="results-count">0 SKU</div></div>
+    <div id="results-container"><div class="no-results"><p>Загрузка данных…</p></div></div>
+    <div class="accessory-panel" id="accessorySelection">
+      <div class="acc-header"><h3 data-i18n="acc_for_sku">Аксессуары для SKU:</h3><span id="selectedSKUCode"></span></div>
+      <div class="acc-warning" data-i18n="acc_price_approx">Ориентировочная цена</div>
+      <div class="acc-body">
+        <div id="currentSKUDetails" class="acc-sku-info"></div>
+        <div id="accessoriesList"></div>
+        <div class="acc-total"><span data-i18n="spec_total">Итоговая стоимость:</span><strong id="finalConfigurationPrice">0 $</strong></div>
+        <button class="btn-add-spec" data-i18n="btn_add_to_spec" onclick="addSKUToSpecification()">
+          <svg style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.5;vertical-align:middle;margin-right:6px" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Добавить в спецификацию
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="spec-table-section" id="finalConfiguration">
+  <div class="spec-table-header"><h3 data-i18n="spec_final">Финальная спецификация</h3>
+    <div class="spec-actions">
+      <button data-i18n="btn_add_manual_short" class="btn-sm" onclick="openAddManualSKUModal()"><svg style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2.5;vertical-align:middle;margin-right:4px" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Добавить вручную</button>
+      <button class="btn-sm btn-excel-img" onclick="exportToExcelWithImages()" title="Скачать Excel с картинками устройств"><svg style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2.5;vertical-align:middle;margin-right:4px" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Excel 📷</button>
+      <button data-i18n="btn_print" class="btn-sm" onclick="printSpec()"><svg style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2.5;vertical-align:middle;margin-right:4px" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Печать</button>
+      <button class="btn-sm danger" onclick="clearSpecification()"><svg style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2.5;vertical-align:middle;margin-right:4px" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg>Очистить</button>
+    </div>
+  </div>
+  <table id="finalConfigTable"><thead><tr><th>Тип</th><th>SKU</th><th data-i18n="spec_name">Наименование</th><th data-i18n="spec_qty">Кол-во</th><th>Цена, $</th><th data-i18n="spec_total_col">Итого, $</th><th></th></tr></thead><tbody id="specTableBody"></tbody></table>
+</div>
+
+<div class="app-footer">by Point Mobile Configurator &nbsp;|&nbsp;Данные загружаются из Google Sheets</div>
+</div>
+
+<div class="floating-group">
+  <button class="btn-float btn-float-addspec" id="btn-float-addspec" onclick="addSKUToSpecification()"><svg style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.5;vertical-align:middle;margin-right:4px" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Добавить в спецификацию</button>
+  <button class="btn-float btn-float-compare" id="btn-float-compare" onclick="showComparison()"><svg style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.5;vertical-align:middle;margin-right:4px" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span data-i18n="btn_compare_short">Сравнить</span><span class="float-badge" id="comparison-count">0</span></button>
+  <button class="btn-float btn-float-spec" id="btn-float-spec" onclick="scrollToSpec()"><svg style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.5;vertical-align:middle;margin-right:4px" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg><span data-i18n="spec_title">Спецификация</span><span class="float-badge" id="spec-count">0</span></button>
+</div>
+
+<button id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+  <svg style="width:22px;height:22px;stroke:#fff;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;" viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
+  <span style="font-size:14px;font-weight:900;color:#fff;line-height:1;letter-spacing:1px">UP</span>
+</button>
+
+<div class="modal-backdrop" id="service-centers-modal" onclick="closeModalOnBackdrop(event,this)"><div class="modal-box"><div class="modal-head"><h2 data-i18n="service_centers">Наши сервисные центры</h2><button class="modal-close" onclick="closeModal('service-centers-modal')">×</button></div><div class="modal-body"><div class="sc-grid"><div class="sc-item"><a href="https://pointmobile.com" target="_blank"><img src="https://placehold.co/200x80/E31837/FFFFFF?text=Point+Mobile" alt="Point Mobile"></a></div></div></div></div></div>
+<div class="modal-backdrop" id="comparison-modal" onclick="closeModalOnBackdrop(event,this)"><div class="modal-box wide"><div class="modal-head"><h2 data-i18n="comparison_title_modal">Сравнение SKU</h2><button class="modal-close" onclick="closeModal('comparison-modal')">×</button></div><div class="modal-body" id="comparison-body"></div></div></div>
+<div class="modal-backdrop" id="manual-sku-modal" onclick="closeModalOnBackdrop(event,this)"><div class="modal-box"><div class="modal-head"><h2 data-i18n="btn_add_manual">Добавить артикул вручную</h2><button class="modal-close" onclick="closeModal('manual-sku-modal')">×</button></div><div class="modal-body"><div class="form-group"><label class="form-label" data-i18n="spec_sku">Артикул (SKU)</label><input type="text" id="manual-sku" class="form-input" placeholder="Введите артикул"></div><div class="form-group"><label class="form-label">Наименование</label><textarea id="manual-name" class="form-textarea" placeholder="Введите наименование"></textarea></div><div class="form-group"><label class="form-label" data-i18n="spec_price">Цена ($)</label><input type="number" id="manual-price" class="form-input" placeholder="0.00" min="0" step="0.01"></div><div class="form-actions"><button class="btn-cancel" onclick="closeModal('manual-sku-modal')" data-i18n="btn_cancel">Отмена</button><button class="btn-submit" onclick="addManualSKU()" data-i18n="btn_add_short">Добавить</button></div></div></div></div>
+<div class="modal-backdrop" id="contacts-modal" onclick="if(event.target===this)closeModal('contacts-modal')"><div style="background:#1a1a1a;border:1px solid #333;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.6);width:100%;max-width:520px;margin:20px;overflow:hidden;animation:modalIn .2s ease"><div style="background:var(--pm-red);color:#fff;padding:20px 24px;display:flex;justify-content:space-between;align-items:center"><span style="font-size:17px;font-weight:700">Контакты Point Mobile</span><button onclick="closeModal('contacts-modal')" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center">✕</button></div><div style="padding:24px;color:#ddd"><div style="margin-bottom:20px"><div style="font-weight:700;color:#fff;font-size:14px">Техническая поддержка</div><div style="font-size:12px;color:#888;margin-bottom:6px">Email: support@pointmobile.com</div><a href="tel:+1234567890" style="display:flex;align-items:center;gap:6px;color:var(--pm-red);text-decoration:none;font-size:13px;margin-bottom:4px">📞 +1 234 567 890</a></div></div></div></div>
+
+<div class="lightbox" id="lightbox" onclick="closeLightbox()"><button class="lightbox-close" onclick="closeLightbox()">&#x2715;</button><img id="lightbox-img" src="" alt=""></div>
+<div class="toast" id="toast"></div>
+
+<script>
+// =============================================
+//  НОВЫЕ URL ДЛЯ POINT MOBILE
+// =============================================
+// Прямые ссылки на CSV — на GitHub Pages CORS не блокирует
+const SKU_DB_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSfwxQgJxZNH6MrKBduAe7kSkGiodwaNYRqPXQr1Tu1ln_ncaOc3u8kxwEJyczNwpCDlAYzAqtysDkO/pub?output=csv';
+const ACCESSORIES_DB_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSPnJyUMVTqc7gyvfYUYaU9PzvGboDeIiXvuQuhRlnlau1qUuXKfbNU17fPDpzlSkp7L4asz7sw4Lf-/pub?output=csv';
+
+// =============================================
+//  ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
+// =============================================
+const $ = id => document.getElementById(id);
+const $$ = t => document.createElement(t);
+const $f = () => document.createDocumentFragment();
+
+function getDriveThumbnail(url, sz = 'w200') {
+  if (!url) return 'https://placehold.co/200x160/1a1a1a/E31837?text=Point+Mobile';
+  if (url.startsWith('data:')) return url;
+  if (/^[a-zA-Z0-9_-]+$/.test(url)) return `https://lh3.googleusercontent.com/d/${url}=${sz}`;
+  const m = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  return m ? `https://lh3.googleusercontent.com/d/${m[1]}=${sz}` : 'https://placehold.co/200x160/1a1a1a/E31837?text=Point+Mobile';
+}
+
+function csvToJson(csv) {
+  const lines = csv.split('\n').filter(l => l.trim() !== '');
+  if (lines.length < 2) return [];
+  const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+  const result = [];
+  for (let i = 1; i < lines.length; i++) {
+    const fields = lines[i].split(',').map(f => f.trim());
+    const obj = {};
+    headers.forEach((h, j) => {
+      let v = (fields[j] || '').trim();
+      if (h === 'price' || h === 'цена') {
+        obj[h] = parseFloat(v.replace(/\s/g, '').replace(',', '.')) || 0;
+      } else if (h === 'lte' || h === 'android' || h === 'model' || h === 'sku' || h === 'accessory_sku') {
+        obj[h] = v.toUpperCase();
+      } else {
+        obj[h] = v;
+      }
+    });
+    if (obj.sku || obj.model) result.push(obj);
+  }
+  return result;
+}
+
+// =============================================
+//  ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ
+// =============================================
+let SKU_DB = [];
+let ACCESSORIES_DB = [];
+let COMPATIBILITY_MAP = {};
+let dataLoaded = false;
+let currentLanguage = 'ru';
+let comparisonList = [];
+let finalSpecificationList = [];
+let currentSelection = null;
+let currentSKUBase = null;
+let currentSKUPrice = 0;
+let currentCategory = 'all';
+let isSearchingBySKU = false;
+
+const SKUMAP = {};
+const ACCMAP = {};
+
+// =============================================
+//  ЗАГРУЗКА ДАННЫХ — ПРЯМОЙ ЗАПРОС (без прокси)
+// =============================================
+async function loadData() {
+  try {
+    setStatus('Загрузка данных...');
+    
+    const fetchCSV = async (url) => {
+      const r = await fetch(url, { cache: 'no-store' });
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      const text = await r.text();
+      return text.replace(/^﻿/, '').trim();
+    };
+
+    const [skuText, accText] = await Promise.all([
+      fetchCSV(SKU_DB_URL),
+      fetchCSV(ACCESSORIES_DB_URL)
+    ]);
+
+    if (!skuText || skuText.length < 10) {
+      throw new Error('Основная таблица не загружена. Проверьте URL.');
+    }
+
+    SKU_DB = csvToJson(skuText).filter(s => s.sku);
+    const rawAcc = csvToJson(accText).filter(a => a.sku);
+    const accSeenLoad = new Set();
+    ACCESSORIES_DB = rawAcc.filter(a => {
+      const k = a.sku.toUpperCase();
+      if (accSeenLoad.has(k)) return false;
+      accSeenLoad.add(k);
+      return true;
+    });
+
+    SKU_DB.forEach(s => { SKUMAP[s.sku.toUpperCase()] = s; });
+    ACCESSORIES_DB.forEach(a => { ACCMAP[a.sku.toUpperCase()] = a; });
+
+    // Строим карту совместимости по модели
+    COMPATIBILITY_MAP = {};
+    ACCESSORIES_DB.forEach(acc => {
+      const model = acc.model ? acc.model.toUpperCase() : null;
+      if (model) {
+        if (!COMPATIBILITY_MAP[model]) COMPATIBILITY_MAP[model] = new Set();
+        COMPATIBILITY_MAP[model].add(acc.sku.toUpperCase());
+      }
+    });
+    for (const k in COMPATIBILITY_MAP) {
+      COMPATIBILITY_MAP[k] = Array.from(COMPATIBILITY_MAP[k]);
+    }
+
+    dataLoaded = true;
+    setStatus(`Загружено ${SKU_DB.length} SKU`);
+    initFilters();
+    filterSKU();
+    
+    // Отправляем высоту страницы в родительский iframe (для Tilda)
+    sendHeight();
+  } catch (err) {
+    console.error(err);
+    setStatus(`Ошибка: ${err.message}. Проверьте подключение и URL таблиц.`);
+    $('results-container').innerHTML = `<div class="no-results"><p>❌ ${err.message}</p></div>`;
+  }
+}
+
+function setStatus(msg) {
+  const el = $('search-status');
+  if (el) el.innerHTML = msg;
+}
+
+// =============================================
+//  АДАПТИВНАЯ ВЫСОТА ДЛЯ IFRAME (Tilda)
+// =============================================
+function sendHeight() {
+  try {
+    const height = document.documentElement.scrollHeight;
+    window.parent.postMessage({ type: 'resize', height: height }, '*');
+  } catch (e) { /* если не в iframe — игнорируем */ }
+}
+
+// Отправляем высоту после загрузки контента и при изменении размера
+window.addEventListener('load', () => setTimeout(sendHeight, 500));
+window.addEventListener('resize', sendHeight);
+
+// =============================================
+//  ФИЛЬТРЫ
+// =============================================
+const FILTER_CHAIN = ['android', 'scanner', 'memory', 'lte'];
+
+function initFilters() {
+  updateModelOptions();
+  FILTER_CHAIN.forEach(f => {
+    if (f !== 'lte') updateSelectOptions(f + '-select', f, SKU_DB, '');
+  });
+}
+
+function filterSKU() {
+  if (!dataLoaded) return;
+  const vals = {
+    model: $('model-select').value,
+    android: $('android-select').value,
+    scanner: $('scanner-select').value,
+    memory: $('memory-select').value,
+    lte: $('lte-select').value,
+  };
+
+  let result = SKU_DB.filter(sku => {
+    for (const [k, v] of Object.entries(vals)) {
+      if (v && sku[k] !== v) return false;
+    }
+    return true;
+  });
+
+  if (currentCategory !== 'all') {
+    const allowed = getCategoryModels(currentCategory);
+    result = result.filter(s => allowed.includes(s.model));
+  }
+
+  renderResults(result);
+  $('results-count').textContent = `${result.length} SKU`;
+  if (!isSearchingBySKU) $('accessorySelection').style.display = 'none';
+  
+  setTimeout(sendHeight, 300);
+}
+
+function getCategoryModels(cat) {
+  const map = {
+    'all': null,
+    'enterprise': ['PM70', 'PM80', 'PM85', 'PM45', 'PM65'],
+    'retail': ['PM20', 'PM25', 'PM30', 'PM35', 'PM40'],
+    'wearable': ['PW50', 'PW60']
+  };
+  return map[cat] || [];
+}
+
+function updateModelOptions() {
+  if (!dataLoaded) return;
+  const sel = $('model-select');
+  const allModels = Array.from(new Set(SKU_DB.map(s => s.model))).sort();
+  const allowed = getCategoryModels(currentCategory);
+  const modelsToShow = allowed ? allModels.filter(m => allowed.includes(m)) : allModels;
+  const cur = sel.value;
+  sel.innerHTML = `<option value="" data-i18n="all_models">Все модели</option>`;
+  modelsToShow.forEach(m => {
+    const o = $$('option');
+    o.value = m;
+    o.textContent = m;
+    sel.appendChild(o);
+  });
+  if (cur && modelsToShow.includes(cur)) sel.value = cur;
+}
+
+function updateAndroidOptions() {
+  const m = $('model-select').value;
+  resetDependentFilters('android');
+  const data = m ? SKU_DB.filter(s => s.model === m) : SKU_DB;
+  updateSelectOptions('android-select', 'android', data, '');
+}
+
+function updateScannerOptions() {
+  const m = $('model-select').value;
+  const a = $('android-select').value;
+  resetDependentFilters('scanner');
+  let d = SKU_DB;
+  if (m) d = d.filter(s => s.model === m);
+  if (a) d = d.filter(s => s.android === a);
+  updateSelectOptions('scanner-select', 'scanner', d, '');
+}
+
+function updateMemoryOptions() {
+  const m = $('model-select').value;
+  const a = $('android-select').value;
+  const sc = $('scanner-select').value;
+  resetDependentFilters('memory');
+  let d = SKU_DB;
+  if (m) d = d.filter(s => s.model === m);
+  if (a) d = d.filter(s => s.android === a);
+  if (sc) d = d.filter(s => s.scanner === sc);
+  updateSelectOptions('memory-select', 'memory', d, '');
+}
+
+function updateButtonsOptions() {
+  const m = $('model-select').value;
+  const a = $('android-select').value;
+  const sc = $('scanner-select').value;
+  const mem = $('memory-select').value;
+  resetDependentFilters('buttons');
+  let d = SKU_DB;
+  if (m) d = d.filter(s => s.model === m);
+  if (a) d = d.filter(s => s.android === a);
+  if (sc) d = d.filter(s => s.scanner === sc);
+  if (mem) d = d.filter(s => s.memory === mem);
+  updateSelectOptions('buttons-select', 'buttons', d, '');
+}
+
+function resetDependentFilters(startFrom) {
+  const idx = FILTER_CHAIN.indexOf(startFrom);
+  if (idx === -1) return;
+  FILTER_CHAIN.slice(idx).forEach(f => {
+    const sel = $(f + '-select');
+    if (sel) {
+      sel.value = '';
+      if (f !== 'lte') updateSelectOptions(`${f}-select`, f, SKU_DB, '');
+    }
+  });
+}
+
+function updateSelectOptions(selectId, prop, data, currentVal) {
+  if (selectId === 'scanner-select') {
+    const vals = Array.from(new Set(data.map(s => s[prop]).filter(Boolean))).sort();
+    buildScannerDropdown(vals);
+    const input = $('scanner-select');
+    const cur = input ? input.value : '';
+    if (cur && !vals.includes(cur)) {
+      input.value = '';
+      const disp = $('scanner-display-text');
+      if (disp) disp.textContent = 'Любой сканер';
+    }
+    return;
+  }
+
+  const sel = $(selectId);
+  if (!sel) return;
+  const firstVal = sel.options[0] ? sel.options[0].value : '';
+  const vals = Array.from(new Set(data.map(s => s[prop]).filter(Boolean))).sort();
+  sel.innerHTML = '';
+  const newFirst = $$('option');
+  newFirst.value = firstVal;
+  newFirst.textContent = 'Все';
+  sel.appendChild(newFirst);
+  vals.forEach(v => {
+    const o = $$('option');
+    o.value = v;
+    o.textContent = v;
+    sel.appendChild(o);
+  });
+  sel.value = (currentVal && vals.includes(currentVal)) ? currentVal : '';
+}
+
+function resetFilters() {
+  ['model', 'android', 'scanner', 'memory', 'lte'].forEach(f => {
+    const sel = $(f + '-select');
+    if (sel) sel.value = '';
+  });
+  currentCategory = 'all';
+  document.querySelectorAll('.cat-pill').forEach((b, i) => b.classList.toggle('active', i === 0));
+  const labelEl = $('cat-label');
+  if (labelEl) labelEl.textContent = 'Все модели';
+  updateModelOptions();
+  filterSKU();
+}
+
+// =============================================
+//  КАСТОМНЫЙ ДРОПДАУН СКАНЕРА
+// =============================================
+function buildScannerDropdown(vals) {
+  const list = $('scanner-options');
+  if (!list) return;
+  list.innerHTML = '';
+  const allItem = $$('div');
+  allItem.className = 'scanner-opt';
+  allItem.dataset.value = '';
+  allItem.textContent = 'Любой сканер';
+  allItem.onclick = () => _selectScanner('', 'Любой сканер');
+  list.appendChild(allItem);
+
+  vals.forEach(val => {
+    const item = $$('div');
+    item.className = 'scanner-opt';
+    item.dataset.value = val;
+    item.textContent = val;
+    item.onclick = () => _selectScanner(val, val);
+    list.appendChild(item);
+  });
+
+  const cur = ($('scanner-select') || {}).value || '';
+  list.querySelectorAll('.scanner-opt').forEach(o => o.classList.toggle('active', o.dataset.value === cur));
+}
+
+function toggleScannerDropdown() {
+  const list = $('scanner-options');
+  if (!list) return;
+  const isOpen = list.style.display !== 'none';
+  if (isOpen) { list.style.display = 'none'; return; }
+  if (list.children.length === 0 && SKU_DB.length) {
+    const vals = Array.from(new Set(SKU_DB.map(s => s.scanner).filter(Boolean))).sort();
+    buildScannerDropdown(vals);
+  }
+  list.style.display = 'block';
+}
+
+function _selectScanner(value, label) {
+  const input = $('scanner-select');
+  if (input) input.value = value;
+  const disp = $('scanner-display-text');
+  if (disp) disp.textContent = label;
+  const list = $('scanner-options');
+  if (list) {
+    list.style.display = 'none';
+    list.querySelectorAll('.scanner-opt').forEach(o => o.classList.toggle('active', o.dataset.value === value));
+  }
+  updateMemoryOptions();
+  filterSKU();
+}
+
+document.addEventListener('click', e => {
+  const dd = $('scanner-dropdown');
+  if (dd && !dd.contains(e.target)) {
+    const list = $('scanner-options');
+    if (list) list.style.display = 'none';
+  }
+});
+
+// =============================================
+//  ОТОБРАЖЕНИЕ РЕЗУЛЬТАТОВ
+// =============================================
+function renderResults(list) {
+  const container = $('results-container');
+  if (!list.length) {
+    container.innerHTML = `<div class="no-results"><p>Ничего не найдено. Сбросьте фильтры.</p></div>`;
+    return;
+  }
+  container.innerHTML = '';
+  const frag = $f();
+  list.forEach((sku, idx) => {
+    const card = createResultCard(sku, idx);
+    frag.appendChild(card);
+  });
+  container.appendChild(frag);
+}
+
+function createResultCard(sku, idx) {
+  const card = $$('div');
+  card.className = 'result-card';
+  card.id = 'card-' + idx + '-' + sku.sku;
+
+  const mainImg = getDriveThumbnail(sku.image, 'w400');
+  const priceHtml = sku.price ? `<div class="sku-price">${sku.price.toLocaleString('ru-RU')} $</div>` :
+    `<div class="sku-price no-price">Цена по запросу</div>`;
+
+  card.innerHTML = `
+    <div class="card-inner">
+      <div class="card-top">
+        <div class="card-meta">
+          <div class="sku-code-row">
+            <div class="sku-code">${sku.sku}</div>
+            <button class="sku-stock-btn" onclick="showInlineStock(event,'${sku.sku}')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>Наличие
+            </button>
+          </div>
+          ${priceHtml}
+          ${sku.description ? `<div class="sku-desc-box">${sku.description}</div>` : ''}
+        </div>
+        <div class="gallery-slot"></div>
+      </div>
+      <div class="badge-row">${getBadges(sku)}</div>
+      <div class="card-actions"></div>
+    </div>
+  `;
+
+  const galleryDiv = $$('div');
+  galleryDiv.className = 'card-gallery';
+  const mainImgEl = $$('img');
+  mainImgEl.className = 'gallery-main';
+  mainImgEl.src = mainImg;
+  mainImgEl.alt = sku.model;
+  mainImgEl.addEventListener('click', () => openLightbox(mainImgEl.src));
+  galleryDiv.appendChild(mainImgEl);
+  card.querySelector('.gallery-slot').replaceWith(galleryDiv);
+
+  const actionsDiv = card.querySelector('.card-actions');
+  const inCompare = comparisonList.includes(sku.sku);
+
+  const btnAcc = $$('button');
+  btnAcc.className = 'btn-action btn-primary';
+  btnAcc.textContent = 'Выбрать аксессуары';
+  btnAcc.addEventListener('click', () => showAccessorySelection(sku.sku));
+  actionsDiv.appendChild(btnAcc);
+
+  const btnCmp = $$('button');
+  btnCmp.className = 'btn-action btn-compare' + (inCompare ? ' in-compare' : '');
+  btnCmp.textContent = inCompare ? '✓ В сравнении' : 'Сравнить';
+  btnCmp.addEventListener('click', () => toggleComparison(sku.sku));
+  actionsDiv.appendChild(btnCmp);
+
+  const decodePanel = $$('div');
+  decodePanel.className = 'sku-decode-panel';
+  card.querySelector('.card-inner').appendChild(decodePanel);
+  renderDecodePanel(sku.sku, decodePanel);
+
+  return card;
+}
+
+function getBadges(sku) {
+  const badges = [];
+  if (sku.android && parseFloat(sku.android) >= 13) {
+    badges.push({ cls: 'android-ready', text: `Android ${sku.android} Ready` });
+  }
+  if (sku.lte === 'YES') badges.push({ cls: 'lte', text: '4G/LTE' });
+  if (sku.model) {
+    const ip = getIPRating(sku.model);
+    if (ip) badges.push({ cls: 'ip-badge', text: ip });
+  }
+  return badges.map(b => `<span class="badge ${b.cls}">${b.text}</span>`).join('');
+}
+
+function getIPRating(model) {
+  const map = {
+    'PM70': 'IP67', 'PM80': 'IP68', 'PM85': 'IP68', 'PM45': 'IP67',
+    'PM65': 'IP67', 'PM20': 'IP54', 'PM25': 'IP54', 'PM30': 'IP65',
+    'PM35': 'IP65', 'PM40': 'IP65', 'PW50': 'IP67', 'PW60': 'IP67'
+  };
+  return map[model] || '';
+}
+
+function renderDecodePanel(skuCode, panel) {
+  const sku = skuCode.trim().toUpperCase();
+  const parts = sku.split('-');
+  const model = parts[0] || '';
+  const memory = parts[1] || '';
+  const scanner = parts[2] || '';
+  const lte = sku.includes('LTE') ? 'YES' : 'NO';
+  const blocks = [
+    { letter: model, label: 'Модель', value: model, cls: 'is-model' },
+    { letter: memory, label: 'Память', value: memory || '—' },
+    { letter: scanner, label: 'Сканер', value: scanner || '—' },
+    { letter: lte === 'YES' ? '4G' : '—', label: 'LTE', value: lte === 'YES' ? 'Есть' : 'Нет', cls: lte === 'YES' ? 'is-lte' : '' }
+  ];
+  const decodeStr = blocks.filter(b => b && b.value && b.value !== '—').map(b => b.value).join(' · ');
+  let html = '<div class="decode-blocks">';
+  for (const b of blocks) {
+    if (!b || !b.value) continue;
+    html += `<div class="decode-block ${b.cls||''}">
+      <div class="decode-block-letter">${b.letter||b.value}</div>
+      <div class="decode-block-label">${b.label}</div>
+      <div class="decode-block-value">${b.value}</div>
+    </div>`;
+  }
+  html += '</div>';
+  if (decodeStr) html += `<div class="decode-string-row"><strong>Расшифровка:</strong> ${decodeStr}</div>`;
+  panel.innerHTML = html;
+}
+
+// =============================================
+//  АКСЕССУАРЫ
+// =============================================
+function showAccessorySelection(skuCode) {
+  const sku = SKUMAP[skuCode.toUpperCase()] || SKU_DB.find(s => s.sku.toUpperCase() === skuCode.toUpperCase());
+  const panel = $('accessorySelection');
+  if (!sku) { panel.style.display = 'none'; return; }
+
+  const modelCode = sku.model.toUpperCase();
+  const compAccs = COMPATIBILITY_MAP[modelCode] || [];
+  currentSKUBase = sku;
+  currentSKUPrice = sku.price || 0;
+  currentSelection = { baseSku: skuCode, accessories: [] };
+
+  $('selectedSKUCode').textContent = skuCode;
+  $('currentSKUDetails').textContent = `Модель: ${sku.model || '—'} | Android: ${sku.android || '—'} | Сканер: ${sku.scanner || '—'}`;
+
+  const listDiv = $('accessoriesList');
+  listDiv.innerHTML = '';
+  if (!compAccs.length) {
+    listDiv.innerHTML = '<p style="text-align:center;color:var(--pm-red);font-weight:600;padding:20px 0;">Для модели нет совместимых аксессуаров.</p>';
+  } else {
+    const accFrag = $f();
+    compAccs.forEach(accSku => {
+      const acc = ACCMAP[accSku] || ACCESSORIES_DB.find(a => a.sku.toUpperCase() === accSku);
+      if (!acc) return;
+      const el = $$('div');
+      el.className = 'acc-item';
+      const cb = $$('input');
+      cb.type = 'checkbox';
+      cb.className = 'acc-checkbox';
+      cb.addEventListener('change', function () {
+        el.classList.toggle('checked', this.checked);
+        updateAccessorySelection(accSku, this.checked);
+      });
+      const infoEl = $$('div');
+      infoEl.className = 'acc-info';
+      infoEl.style.flex = '1';
+      const skuEl = $$('div');
+      skuEl.className = 'acc-sku-code';
+      skuEl.textContent = acc.sku;
+      const descEl = $$('div');
+      descEl.className = 'acc-desc';
+      descEl.textContent = acc.description || 'Нет описания';
+      infoEl.appendChild(skuEl);
+      infoEl.appendChild(descEl);
+      const priceEl = $$('div');
+      priceEl.className = 'acc-price';
+      priceEl.textContent = acc.price ? acc.price.toLocaleString('ru-RU') + ' $' : '—';
+      el.appendChild(cb);
+      el.appendChild(infoEl);
+      el.appendChild(priceEl);
+      el.addEventListener('click', e => {
+        if (e.target.type === 'checkbox') return;
+        cb.checked = !cb.checked;
+        cb.dispatchEvent(new Event('change'));
+      });
+      accFrag.appendChild(el);
+    });
+    listDiv.appendChild(accFrag);
+  }
+  panel.style.display = 'block';
+  updateTotalPrice();
+  panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  $('btn-float-addspec').classList.add('visible');
+  setTimeout(sendHeight, 400);
+}
+
+function updateAccessorySelection(accSku, isChecked) {
+  if (!currentSelection) return;
+  const i = currentSelection.accessories.indexOf(accSku);
+  if (isChecked && i === -1) currentSelection.accessories.push(accSku);
+  else if (!isChecked && i > -1) currentSelection.accessories.splice(i, 1);
+  updateTotalPrice();
+}
+
+function updateTotalPrice() {
+  const accTotal = (currentSelection?.accessories || []).reduce((sum, sk) => {
+    const a = ACCMAP[sk] || ACCESSORIES_DB.find(x => x.sku.toUpperCase() === sk);
+    return sum + (a ? a.price || 0 : 0);
+  }, 0);
+  $('finalConfigurationPrice').textContent = (currentSKUPrice + accTotal).toLocaleString('ru-RU') + ' $';
+}
+
+function addSKUToSpecification() {
+  if (!currentSelection || !currentSKUBase) return;
+  const name = currentSKUBase.description || `${currentSKUBase.model || '?'} / ${currentSKUBase.android || '?'} / ${currentSKUBase.scanner || '?'}`;
+  finalSpecificationList.push({
+    type: 'Base SKU',
+    sku: currentSKUBase.sku,
+    name: name,
+    price: currentSKUBase.price || 0,
+    qty: 1
+  });
+  currentSelection.accessories.forEach(sk => {
+    const a = ACCMAP[sk] || ACCESSORIES_DB.find(x => x.sku.toUpperCase() === sk);
+    if (a) {
+      finalSpecificationList.push({
+        type: 'Accessory',
+        sku: a.sku,
+        name: a.description || '—',
+        price: a.price || 0,
+        qty: 1
+      });
+    }
+  });
+  renderFinalSpecification();
+  $('accessorySelection').style.display = 'none';
+  $('btn-float-addspec').classList.remove('visible');
+  currentSelection = null;
+  currentSKUBase = null;
+  showToast('Конфигурация добавлена в спецификацию');
+  setTimeout(sendHeight, 400);
+}
+
+// =============================================
+//  СПЕЦИФИКАЦИЯ
+// =============================================
+function renderFinalSpecification() {
+  const tbody = $('specTableBody');
+  const section = $('finalConfiguration');
+  tbody.innerHTML = '';
+  let total = 0;
+  finalSpecificationList.forEach((item, idx) => {
+    const subtotal = (item.price || 0) * (item.qty || 1);
+    total += subtotal;
+    const tr = $$('tr');
+    if (item.type === 'Accessory') tr.className = 'acc-row';
+    tr.innerHTML = `
+      <td><span class="tag-${item.type === 'Accessory' ? 'acc' : 'base'}">${item.type === 'Base SKU' ? 'Base' : 'Acc'}</span></td>
+      <td style="font-family:'DM Mono',monospace;font-size:13px;">${item.sku}</td>
+      <td>${item.name}</td>
+      <td><input type="number" class="qty-input" value="${item.qty||1}" min="1" onchange="updateQty(${idx},this.value)"></td>
+      <td>${(item.price||0).toLocaleString('ru-RU')} $</td>
+      <td style="font-weight:600;">${subtotal.toLocaleString('ru-RU')} $</td>
+      <td><button class="remove-row-btn" onclick="removeSpecRow(${idx})">×</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+  const totRow = $$('tr');
+  totRow.className = 'spec-total-row';
+  totRow.innerHTML = `
+    <td colspan="5" style="text-align:right;">Итого:</td>
+    <td class="spec-grand-total">${total.toLocaleString('ru-RU')} $</td>
+    <td></td>
+  `;
+  tbody.appendChild(totRow);
+  const count = finalSpecificationList.filter(i => i.type !== 'Accessory').length;
+  section.style.display = finalSpecificationList.length ? 'block' : 'none';
+  $('spec-count').textContent = count;
+  $('btn-float-spec').classList.toggle('visible', finalSpecificationList.length > 0);
+  setTimeout(sendHeight, 300);
+}
+
+function updateQty(idx, val) {
+  finalSpecificationList[idx].qty = Math.max(1, parseInt(val) || 1);
+  renderFinalSpecification();
+}
+
+function removeSpecRow(idx) {
+  finalSpecificationList.splice(idx, 1);
+  renderFinalSpecification();
+}
+
+function clearSpecification() {
+  if (!confirm('Очистить всю спецификацию?')) return;
+  finalSpecificationList = [];
+  renderFinalSpecification();
+  showToast('Спецификация очищена');
+}
+
+function printSpec() {
+  const win = window.open('', '_blank');
+  const rows = finalSpecificationList.map(item => {
+    const sub = (item.price || 0) * (item.qty || 1);
+    return `<tr><td>${item.type}</td><td>${item.sku}</td><td>${item.name}</td><td>${item.qty||1}</td><td>${(item.price||0).toLocaleString('ru-RU')} $</td><td>${sub.toLocaleString('ru-RU')} $</td></tr>`;
+  }).join('');
+  const total = finalSpecificationList.reduce((s, i) => s + (i.price || 0) * (i.qty || 1), 0);
+  win.document.write(`
+    <!DOCTYPE html><html><head><title>Point Mobile Specification</title>
+    <style>body{font-family:Arial,sans-serif;padding:30px;background:#0d0d0d;color:#ddd}h1{color:#E31837}table{width:100%;border-collapse:collapse;margin-top:20px}th{background:#E31837;color:#fff;padding:10px;text-align:left}td{padding:9px 10px;border-bottom:1px solid #333}.total{font-weight:700;font-size:18px;color:#E31837}</style>
+    </head><body><h1>Point Mobile — Спецификация</h1>
+    <p>Дата: ${new Date().toLocaleDateString('ru-RU')}</p>
+    <table><thead><tr><th>Тип</th><th>SKU</th><th>Наименование</th><th>Кол-во</th><th>Цена</th><th>Итого</th></tr></thead>
+    <tbody>${rows}<tr><td colspan="5" style="text-align:right;font-weight:700">Итого:</td><td class="total">${total.toLocaleString('ru-RU')} $</td></tr></tbody></table>
+    </body></html>
+  `);
+  win.document.close();
+  win.print();
+}
+
+function addManualSKU() {
+  const sku = $('manual-sku').value.trim();
+  const name = $('manual-name').value.trim();
+  const price = parseFloat($('manual-price').value) || 0;
+  if (!sku) { showToast('Введите SKU'); return; }
+  finalSpecificationList.push({ type: 'Manual', sku, name: name || '—', price, qty: 1 });
+  renderFinalSpecification();
+  closeModal('manual-sku-modal');
+  $('manual-sku').value = '';
+  $('manual-name').value = '';
+  $('manual-price').value = '';
+  showToast('Добавлено в спецификацию');
+}
+
+function openAddManualSKUModal() { showModal('manual-sku-modal'); }
+
+// =============================================
+//  СРАВНЕНИЕ
+// =============================================
+function toggleComparison(skuCode) {
+  const i = comparisonList.indexOf(skuCode);
+  if (i > -1) comparisonList.splice(i, 1);
+  else {
+    if (comparisonList.length >= 4) { showToast('Максимум 4 SKU'); return; }
+    comparisonList.push(skuCode);
+  }
+  $('comparison-count').textContent = comparisonList.length;
+  $('btn-float-compare').classList.toggle('visible', comparisonList.length > 0);
+  filterSKU();
+}
+
+function showComparison() {
+  if (comparisonList.length < 2) { showToast('Выберите минимум 2 SKU'); return; }
+  const skus = comparisonList.map(c => SKU_DB.find(s => s.sku === c)).filter(Boolean);
+  const props = Object.keys(skus[0]).filter(k => !['sku', 'price', 'description'].includes(k));
+  let html = `<p style="color:#888;font-size:13px;margin-bottom:14px;">Различия выделены красным.</p>
+    <div class="compare-table-wrap"><table class="compare-table"><thead><tr><th>Характеристика</th>
+    ${skus.map(s => `<th>${s.sku}</th>`).join('')}</tr></thead><tbody>`;
+  props.forEach(p => {
+    const vals = skus.map(s => s[p] || '—');
+    const allSame = new Set(vals).size <= 1;
+    html += `<tr><td class="prop-name">${p}</td>${vals.map(v => `<td class="${allSame?'':'diff'}">${v}</td>`).join('')}</tr>`;
+  });
+  const prices = skus.map(s => (s.price || 0).toLocaleString('ru-RU') + ' $');
+  html += `<tr><td class="prop-name">Цена</td>${prices.map((p,i) => `<td class="${new Set(prices).size<=1?'':'diff'}" style="font-weight:700;">${p}</td>`).join('')}</tr>`;
+  html += `</tbody></table></div>
+    <div style="display:flex;justify-content:flex-end;margin-top:16px;">
+      <button class="btn-action btn-primary" onclick="comparisonList=[];$('btn-float-compare').classList.remove('visible');closeModal('comparison-modal');$('comparison-count').textContent=0;filterSKU();">Очистить сравнение</button>
+    </div>`;
+  $('comparison-body').innerHTML = html;
+  showModal('comparison-modal');
+}
+
+// =============================================
+//  ЭКСПОРТ В EXCEL (упрощённый)
+// =============================================
+function exportToExcelWithImages() {
+  if (!finalSpecificationList.length) { showToast('Нет данных для экспорта'); return; }
+  showToast('Генерация Excel...');
+  let csv = 'Тип;SKU;Наименование;Кол-во;Цена ($);Итого ($)\n';
+  let total = 0;
+  finalSpecificationList.forEach(item => {
+    const sub = (item.price || 0) * (item.qty || 1);
+    total += sub;
+    csv += `${item.type};${item.sku};${item.name};${item.qty||1};${item.price||0};${sub}\n`;
+  });
+  csv += `\n;;Итого;;;${total}`;
+  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+  const a = $$('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `PointMobile_Specification_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  showToast('CSV скачан!');
+}
+
+// =============================================
+//  ПОИСК
+// =============================================
+function searchBySKU() {
+  const q = $('sku-search').value.trim().toUpperCase();
+  if (!q) { isSearchingBySKU = false; filterSKU(); return; }
+  isSearchingBySKU = true;
+  const skuResults = SKU_DB.filter(s => s.sku.toUpperCase().includes(q));
+  const accResults = ACCESSORIES_DB.filter(a => {
+    const key = a.sku.toUpperCase();
+    return key.includes(q) || (a.description || '').toUpperCase().includes(q);
+  });
+  const container = $('results-container');
+  const countEl = $('results-count');
+  if (!skuResults.length && !accResults.length) {
+    container.innerHTML = `<div class="no-results"><p>Ничего не найдено по запросу «${q}».</p></div>`;
+    countEl.textContent = '0 результатов';
+    return;
+  }
+  countEl.textContent = `${skuResults.length + accResults.length} результат(ов)`;
+  const frag = $f();
+  if (skuResults.length) {
+    const sep = $$('div');
+    sep.style.cssText = 'font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.3);margin-bottom:10px;margin-top:4px;';
+    sep.textContent = 'Устройства';
+    frag.appendChild(sep);
+    skuResults.forEach((s, i) => frag.appendChild(createResultCard(s, i)));
+  }
+  if (accResults.length) {
+    const sep2 = $$('div');
+    sep2.style.cssText = 'font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.3);margin-bottom:10px;margin-top:20px;';
+    sep2.textContent = 'Аксессуары';
+    frag.appendChild(sep2);
+    accResults.forEach(acc => {
+      const card = $$('div');
+      card.className = 'acc-result-card';
+      card.innerHTML = `
+        <div class="card-inner">
+          <div class="acc-tag">Аксессуар</div>
+          <div class="sku-code-row"><div class="acc-result-sku">${acc.sku}</div></div>
+          <div class="acc-result-desc">${acc.description || '—'}</div>
+          <div class="acc-result-price">${acc.price ? acc.price.toLocaleString('ru-RU') + ' $' : 'По запросу'}</div>
+          <div class="card-actions"><button class="btn-action btn-primary" onclick="addAccessoryDirectToSpec('${acc.sku}')">Добавить в спецификацию</button></div>
+        </div>
+      `;
+      frag.appendChild(card);
+    });
+  }
+  container.innerHTML = '';
+  container.appendChild(frag);
+  $('accessorySelection').style.display = 'none';
+  setTimeout(sendHeight, 400);
+}
+
+function addAccessoryDirectToSpec(accSku) {
+  const acc = ACCMAP[accSku.toUpperCase()] || ACCESSORIES_DB.find(a => a.sku.toUpperCase() === accSku.toUpperCase());
+  if (!acc) { showToast('Аксессуар не найден'); return; }
+  finalSpecificationList.push({
+    type: 'Accessory',
+    sku: acc.sku,
+    name: acc.description || '—',
+    price: acc.price || 0,
+    qty: 1
+  });
+  renderFinalSpecification();
+  showToast(`${acc.sku} добавлен в спецификацию`);
+}
+
+// =============================================
+//  INLINE STOCK POPUP (заглушка)
+// =============================================
+let _inlineStockPopup = null;
+
+function showInlineStock(event, sku) {
+  event.stopPropagation();
+  if (_inlineStockPopup) { _inlineStockPopup.remove(); _inlineStockPopup = null; }
+  const popup = $$('div');
+  popup.className = 'inline-stock-popup';
+  popup.innerHTML = `
+    <div class="inline-stock-header">
+      <span class="inline-stock-sku">${sku}</span>
+      <span class="inline-stock-title">Наличие</span>
+      <button class="inline-stock-close" onclick="closeInlineStock()">✕</button>
+    </div>
+    <div class="inline-stock-body">
+      <div class="isp-no-data">Данные о наличии для Point Mobile не настроены.<br>Свяжитесь с поставщиком.</div>
+    </div>`;
+  document.body.appendChild(popup);
+  _inlineStockPopup = popup;
+  const btn = event.currentTarget;
+  const rect = btn.getBoundingClientRect();
+  popup.style.left = Math.min(rect.left, window.innerWidth - 380) + 'px';
+  popup.style.top = (rect.bottom + 8 > window.innerHeight ? rect.top - 120 : rect.bottom + 8) + 'px';
+  setTimeout(() => {
+    document.addEventListener('click', _inlineStockOutside, { once: true, capture: true });
+  }, 10);
+}
+
+function _inlineStockOutside(e) {
+  if (_inlineStockPopup && !_inlineStockPopup.contains(e.target)) closeInlineStock();
+}
+
+function closeInlineStock() {
+  if (_inlineStockPopup) { _inlineStockPopup.remove(); _inlineStockPopup = null; }
+}
+
+// =============================================
+//  МОДАЛЬНЫЕ ОКНА
+// =============================================
+function showModal(id) {
+  const el = $(id);
+  if (el) { el.classList.add('open'); document.body.style.overflow = 'hidden'; }
+}
+
+function closeModal(id) {
+  const el = $(id);
+  if (el) { el.classList.remove('open'); document.body.style.overflow = ''; }
+}
+
+function closeModalOnBackdrop(e, el) {
+  if (e.target === el) closeModal(el.id);
+}
+
+// =============================================
+//  НАВИГАЦИЯ
+// =============================================
+function toggleNavDropdown(id) {
+  const menu = $(id + '-menu');
+  if (!menu) return;
+  const isOpen = menu.classList.contains('open');
+  closeNavDropdowns();
+  if (!isOpen) {
+    menu.classList.add('open');
+    $(id).classList.add('open');
+  }
+}
+
+function closeNavDropdowns() {
+  document.querySelectorAll('.nav-dropdown-menu.open').forEach(m => m.classList.remove('open'));
+  document.querySelectorAll('.nav-dropdown.open').forEach(w => w.classList.remove('open'));
+}
+
+function selectCategory(cat, label, el) {
+  closeNavDropdowns();
+  $('cat-label').textContent = label;
+  document.querySelectorAll('.nav-drop-item').forEach(i => {
+    if (i.dataset.cat !== undefined) i.classList.toggle('active', i === el);
+  });
+  currentCategory = cat;
+  updateModelOptions();
+  filterSKU();
+}
+
+function selectCatPill(cat, el) {
+  document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  const labels = { 'all': 'Все модели', 'enterprise': 'Enterprise', 'retail': 'Retail', 'wearable': 'Wearable' };
+  const labelEl = $('cat-label');
+  if (labelEl) labelEl.textContent = labels[cat] || 'Все модели';
+  currentCategory = cat;
+  updateModelOptions();
+  filterSKU();
+}
+
+function selectLang(lang, el) {
+  closeNavDropdowns();
+  document.querySelectorAll('.lang-item').forEach(i => i.classList.remove('active'));
+  el.classList.add('active');
+  $('lang-current').textContent = lang.toUpperCase();
+  currentLanguage = lang;
+  applyTranslations();
+}
+
+// =============================================
+//  ПЕРЕВОДЫ
+// =============================================
+function t(key) {
+  const translations = {
+    ru: {
+      configurator_subtitle: 'Конфигуратор подбора',
+      all_devices: 'Все модели',
+      filters: 'Фильтры',
+      filter_model: 'Модель',
+      filter_android: 'Android',
+      filter_scanner: 'Сканер',
+      filter_memory: 'Память',
+      filter_lte: 'LTE',
+      lte_any: 'Не важно',
+      lte_yes: 'Есть LTE',
+      lte_no: 'Нет LTE',
+      all_models: 'Все модели',
+      all_android: 'Любая версия',
+      all_scanners: 'Любой сканер',
+      all_memory: 'Любая память',
+      btn_search: 'Найти',
+      btn_clear_filters: 'Сбросить фильтры',
+      btn_site: 'Сайт',
+      btn_service: 'Сервис',
+      btn_tech_docs: 'Tech Docs',
+      btn_dont_know: 'Я не знаю, что выбрать',
+      search_placeholder: 'Поиск по SKU устройства или аксессуара…',
+      results_heading: 'Результаты подбора',
+      spec_final: 'Финальная спецификация',
+      spec_name: 'Наименование',
+      spec_qty: 'Кол-во',
+      spec_price: 'Цена ($)',
+      spec_total_col: 'Итого, $',
+      spec_total: 'Итоговая стоимость:',
+      btn_print: 'Печать',
+      btn_cancel: 'Отмена',
+      btn_add_manual: 'Добавить артикул вручную',
+      btn_add_to_spec: 'Добавить в спецификацию',
+      btn_add_short: 'Добавить',
+      btn_compare_short: 'Сравнить',
+      acc_for_sku: 'Аксессуары для SKU:',
+      acc_price_approx: 'Ориентировочная цена',
+      comparison_title_modal: 'Сравнение SKU',
+      btn_add_manual_short: 'Добавить вручную',
+      service_centers: 'Наши сервисные центры',
+      spec_title: 'Спецификация'
+    },
+    en: {
+      configurator_subtitle: 'Product Configurator',
+      all_devices: 'All Models',
+      filters: 'Filters',
+      filter_model: 'Model',
+      filter_android: 'Android',
+      filter_scanner: 'Scanner',
+      filter_memory: 'Memory',
+      filter_lte: 'LTE',
+      lte_any: 'Any',
+      lte_yes: 'Has LTE',
+      lte_no: 'No LTE',
+      all_models: 'All Models',
+      all_android: 'Any Version',
+      all_scanners: 'Any Scanner',
+      all_memory: 'Any Memory',
+      btn_search: 'Search',
+      btn_clear_filters: 'Reset Filters',
+      btn_site: 'Website',
+      btn_service: 'Service',
+      btn_tech_docs: 'Tech Docs',
+      btn_dont_know: "I don't know what to choose",
+      search_placeholder: 'Search by SKU (device or accessory)…',
+      results_heading: 'Search Results',
+      spec_final: 'Final Specification',
+      spec_name: 'Name',
+      spec_qty: 'Qty',
+      spec_price: 'Price ($)',
+      spec_total_col: 'Total, $',
+      spec_total: 'Total cost:',
+      btn_print: 'Print',
+      btn_cancel: 'Cancel',
+      btn_add_manual: 'Add SKU manually',
+      btn_add_to_spec: 'Add to Specification',
+      btn_add_short: 'Add',
+      btn_compare_short: 'Compare',
+      acc_for_sku: 'Accessories for SKU:',
+      acc_price_approx: 'Approx. price',
+      comparison_title_modal: 'SKU Comparison',
+      btn_add_manual_short: 'Add manually',
+      service_centers: 'Our Service Centers',
+      spec_title: 'Specification'
+    }
+  };
+  return (translations[currentLanguage] && translations[currentLanguage][key]) || key;
+}
+
+function applyTranslations() {
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    el.textContent = t(el.dataset.i18n);
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    el.placeholder = t(el.dataset.i18nPlaceholder);
+  });
+}
+
+// =============================================
+//  ПРОЧЕЕ
+// =============================================
+function openLightbox(src) {
+  $('lightbox-img').src = src;
+  $('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  $('lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function scrollToSpec() {
+  $('finalConfiguration').scrollIntoView({ behavior: 'smooth' });
+}
+
+function showToast(msg) {
+  const el = $('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(el._timer);
+  el._timer = setTimeout(() => el.classList.remove('show'), 2800);
+}
+
+function clearSearch() {
+  $('sku-search').value = '';
+  isSearchingBySKU = false;
+  filterSKU();
+}
+
+function debounce(fn, delay) {
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn(...args), delay);
+  };
+}
+
+// =============================================
+//  ЗАПУСК
+// =============================================
+document.addEventListener('DOMContentLoaded', () => {
+  loadData();
+  applyTranslations();
+
+  const searchInput = $('sku-search');
+  searchInput.addEventListener('input', debounce(() => {
+    if (dataLoaded) searchBySKU();
+  }, 300));
+  searchInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter') searchBySKU();
+    if (e.key === 'Escape' && searchInput.value) {
+      searchInput.value = '';
+      clearSearch();
+    }
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeLightbox();
+  });
+
+  window.addEventListener('scroll', () => {
+    $('back-to-top').classList.toggle('visible', window.scrollY > 320);
+  });
+});
+
+document.addEventListener('click', e => {
+  if (e.target.closest('.modal-backdrop') && e.target.closest('.modal-backdrop').id) {
+    closeModal(e.target.closest('.modal-backdrop').id);
+  }
+});
+</script>
+</body>
+</html>
